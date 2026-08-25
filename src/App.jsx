@@ -119,7 +119,7 @@ function FolderModal({ close, createFolder, folder, updateFolder }) {
   const colors = folderColors.map((value, index) => ({ value, preview: folderPickerColors[index] }));
   const emojis = ['🍔', '🍎', '🧸', '🌅', '🔑', '💌', '🪴', '🚗', '✈️', '📦', '🎀', '⭐', '💡', '😊', '👻', '👾', '📸', '❤️'];
   const submit = (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const details = { name: form.get('name').trim(), description: form.get('description').trim(), color, icon }; if (isEditing) updateFolder(folder.id, details); else createFolder(details); };
-  return <div className="overlay"><form className="modal folder-modal" onSubmit={submit}><button className="close" type="button" onClick={close} aria-label="Close">×</button><h2>{isEditing ? 'Edit Stash' : 'Create Stash'}</h2><div className="folder-preview"><FolderArt folder={{ color, icon, items: [] }} /></div><label><span className="field-label">Stash name <span className="required-marker" aria-hidden="true">*</span></span><div className="stash-name-fields"><input className="field" name="name" required maxLength="42" placeholder="e.g. Retro packaging" defaultValue={folder?.name} autoFocus /><div className="emoji-control"><button className="emoji-button" type="button" onClick={() => setEmojiPickerOpen((open) => !open)} aria-label="Choose a stash emoji" aria-expanded={emojiPickerOpen} aria-controls="stash-emoji-picker">{icon}</button>{emojiPickerOpen && <div id="stash-emoji-picker" className="emoji-picker-popover" role="listbox" aria-label="Choose a stash emoji">{emojis.map((emoji) => <button key={emoji} type="button" role="option" aria-selected={icon === emoji} onClick={() => { setIcon(emoji); setEmojiPickerOpen(false); }}>{emoji}</button>)}</div>}</div></div></label><label>Description<input className="field" name="description" maxLength="80" placeholder="Graphic design inspo" defaultValue={folder?.description} /></label><div className="folder-picker"><p>Colour</p><div className="swatches">{colors.map((swatch) => <button key={swatch.value} type="button" className={`swatch ${color === swatch.value ? 'selected' : ''}`} style={{ '--swatch': swatch.preview }} onClick={() => setColor(swatch.value)} aria-label={`Select ${swatch.value}`} />)}</div></div><button className={`btn btn-orange ${isEditing ? 'btn-full' : 'primary-action'}`}>{isEditing ? 'Save Changes' : 'Create Stash'}</button></form></div>;
+  return <div className="overlay"><form className="modal folder-modal" onSubmit={submit}><button className="close" type="button" onClick={close} aria-label="Close">×</button><h2>{isEditing ? 'Edit Stash' : 'Create Stash'}</h2><div className="folder-preview"><FolderArt folder={{ color, icon, items: [] }} /></div><label><span className="field-label">Stash name <span className="required-marker" aria-hidden="true">*</span></span><div className="stash-name-fields"><input className="field" name="name" required maxLength="42" placeholder="e.g. Retro packaging" defaultValue={folder?.name} autoFocus /><div className="emoji-control"><button className="emoji-button" type="button" onClick={() => setEmojiPickerOpen((open) => !open)} aria-label="Choose a stash emoji" aria-expanded={emojiPickerOpen} aria-controls="stash-emoji-picker">{icon}</button>{emojiPickerOpen && <div id="stash-emoji-picker" className="emoji-picker-popover" role="listbox" aria-label="Choose a stash emoji">{emojis.map((emoji) => <button key={emoji} type="button" role="option" aria-selected={icon === emoji} onClick={() => { setIcon(emoji); setEmojiPickerOpen(false); }}>{emoji}</button>)}</div>}</div></div></label><label>Description<input className="field" name="description" maxLength="80" placeholder="Graphic design inspo" defaultValue={folder?.description} /></label><div className="folder-picker"><p>Colour</p><div className="swatches">{colors.map((swatch) => <button key={swatch.value} type="button" className={`swatch ${color === swatch.value ? 'selected' : ''}`} style={{ '--swatch': swatch.preview }} onClick={() => setColor(swatch.value)} aria-label={`Select ${swatch.value}`} />)}</div></div><button className={`btn btn-orange ${isEditing ? 'btn-full' : 'primary-action'}`}>{isEditing ? 'Save Changes' : 'Create'}</button></form></div>;
 }
 
 function DeleteFolderModal({ folder, close, deleteFolder }) {
@@ -227,6 +227,7 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
   const [destinationFolderId, setDestinationFolderId] = useState(folder?.id || folders[0]?.id || '');
   const [sampling, setSampling] = useState(false);
   const [samplingSlot, setSamplingSlot] = useState(null);
+  const [samplingPosition, setSamplingPosition] = useState({ x: 0.5, y: 0.5 });
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const autoRemoveRef = useRef(false);
@@ -240,7 +241,18 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
   const brushingRef = useRef(false);
   const cropDragRef = useRef(null);
   const cropBoundsRef = useRef({ maxX: 0, maxY: 0 });
+  const samplingImageRef = useRef(null);
+  const samplingDragRef = useRef(false);
   const canvasImage = processed || prepared;
+
+  useEffect(() => {
+    const eyedropper = document.querySelector('.sampling-eyedropper');
+    if (!eyedropper) return;
+    eyedropper.style.left = `${samplingPosition.x * 100}%`;
+    eyedropper.style.top = `${samplingPosition.y * 100}%`;
+    eyedropper.style.backgroundImage = `url(${processed})`;
+    eyedropper.style.backgroundPosition = `${samplingPosition.x * 100}% ${samplingPosition.y * 100}%`;
+  }, [processed, sampling, samplingPosition]);
 
   useEffect(() => {
     if (!canvasRef.current || step === 3) return;
@@ -494,28 +506,51 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
   };
   const pickColor = async () => {
     const slotIndex = selectedColor && colors.includes(selectedColor) ? colors.indexOf(selectedColor) : null;
-    if ('EyeDropper' in window) {
+    const useNativePicker = 'EyeDropper' in window && !window.matchMedia('(pointer: coarse)').matches;
+    if (useNativePicker) {
       try { const { sRGBHex } = await new window.EyeDropper().open(); applyColor(sRGBHex, slotIndex); } catch {}
     } else {
       setSamplingSlot(slotIndex);
+      setSamplingPosition({ x: 0.5, y: 0.5 });
       setSampling(true);
     }
   };
-  const samplePreview = (event) => {
-    if (!sampling) return;
-    const image = event.currentTarget;
+  const sampleAtPosition = (position) => {
+    const image = samplingImageRef.current;
+    if (!image || !image.naturalWidth || !image.naturalHeight) return;
     const canvas = document.createElement('canvas');
     canvas.width = image.naturalWidth;
     canvas.height = image.naturalHeight;
     const context = canvas.getContext('2d');
     context.drawImage(image, 0, 0);
-    const rect = image.getBoundingClientRect();
-    const x = Math.min(canvas.width - 1, Math.max(0, Math.floor((event.clientX - rect.left) * canvas.width / rect.width)));
-    const y = Math.min(canvas.height - 1, Math.max(0, Math.floor((event.clientY - rect.top) * canvas.height / rect.height)));
+    const x = Math.min(canvas.width - 1, Math.max(0, Math.floor(position.x * canvas.width)));
+    const y = Math.min(canvas.height - 1, Math.max(0, Math.floor(position.y * canvas.height)));
     const [red, green, blue] = context.getImageData(x, y, 1, 1).data;
     applyColor(`#${[red, green, blue].map((channel) => channel.toString(16).padStart(2, '0')).join('')}`, samplingSlot);
     setSampling(false);
     setSamplingSlot(null);
+  };
+  const moveSamplingEyedropper = (event) => {
+    const image = samplingImageRef.current;
+    if (!image) return null;
+    const rect = image.getBoundingClientRect();
+    const position = {
+      x: Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)),
+      y: Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height)),
+    };
+    setSamplingPosition(position);
+    return position;
+  };
+  const beginSamplingEyedropper = (event) => {
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    samplingDragRef.current = true;
+    moveSamplingEyedropper(event);
+  };
+  const finishSamplingEyedropper = (event) => {
+    if (!samplingDragRef.current) return;
+    samplingDragRef.current = false;
+    sampleAtPosition(moveSamplingEyedropper(event) || samplingPosition);
   };
   const removeColor = (color) => {
     setColors((current) => current.filter((entry) => entry !== color));
@@ -535,7 +570,7 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
 
     {step === 1 && <section className="item-step">
       {!source && <div className={`upload-zone ${isDragging ? 'dragging' : ''}`} onDragEnter={(event) => { event.preventDefault(); setIsDragging(true); }} onDragOver={(event) => event.preventDefault()} onDragLeave={() => setIsDragging(false)} onDrop={drop}>
-        <strong>{isDragging ? 'Drop it here' : 'Drop a packaging photo here'}</strong>
+        <strong>{isDragging ? 'Drop it here' : 'Drop or upload your photo here'}</strong>
         <span className="upload-tip">(Best with plain background)</span>
         <input className="file-input" ref={fileInputRef} type="file" onChange={upload} accept="image/*" tabIndex="-1" aria-hidden="true" />
         <button className="upload-file-button" type="button" onClick={() => fileInputRef.current?.click()}>Choose file</button>
@@ -564,7 +599,7 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
       <div className="step-actions"><button className="btn btn-quiet" type="button" onClick={() => { cancelRemoval(); setStep(1); }}>Back</button><button className="btn btn-orange" type="button" disabled={!processed || isRemoving} onClick={useCanvasImage}>Next</button></div>
     </section>}
 
-    {step === 3 && <section className="item-step"><img className={`details-thumbnail ${sampling ? 'is-sampling' : ''}`} src={processed} alt="Prepared item thumbnail" onClick={samplePreview} /><div className="details-primary-fields"><label><span className="field-label">Item name <span className="required-marker" aria-hidden="true">*</span></span><input className="field" name="name" required maxLength="60" placeholder="e.g. Colourful Poster" value={details.name} onChange={(event) => setDetails((current) => ({ ...current, name: event.target.value }))} autoFocus /></label><label>Material<input className="field" name="material" maxLength="60" placeholder="e.g. Plastic, paper" value={details.material} onChange={(event) => setDetails((current) => ({ ...current, material: event.target.value }))} /></label></div><label>Notes<textarea className="field textarea" name="notes" maxLength="250" placeholder="What catches your eye?" value={details.notes} onChange={(event) => setDetails((current) => ({ ...current, notes: event.target.value }))} /></label><div className="colour-picker" aria-label="Item colours"><button className="eyedropper-btn" type="button" onClick={pickColor} disabled={!selectedColor && colors.length >= 3} aria-label={selectedColor ? `Change ${selectedColor}` : 'Add a colour from the item'} title={selectedColor ? `Change ${selectedColor}` : 'Add a colour from the item'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.7 3.3 6 6-3 3-1.5-1.5-6.7 6.7-2.4.6.6-2.4 6.7-6.7-1.5-1.5 2.8-2.8ZM5.7 17.3l1 1-2.9 2.9a2 2 0 0 1-2.8-2.8l2.9-2.9 1 1 .8-.8Z" /></svg></button><div className="item-colours">{Array.from({ length: 3 }, (_, index) => { const color = colors[index]; const tone = color ? swatchTone(color) : ''; return color ? <button type="button" key={color} className={`item-colour-chip ${tone} ${selectedColor === color ? 'selected' : ''}`} style={{ '--chip': color, '--chip-text': contrastingTextColor(color) }} onClick={() => setSelectedColor((current) => current === color ? '' : color)} aria-pressed={selectedColor === color} aria-label={`${selectedColor === color ? 'Unselect' : 'Select'} ${color}`}><span>{color}</span><span className="swatch-remove" role="button" tabIndex="0" aria-label={`Delete ${color}`} onClick={(event) => { event.stopPropagation(); removeColor(color); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); removeColor(color); } }}>×</span></button> : <span key={`colour-slot-${index}`} className="item-colour-chip empty">Colour {index + 1}</span>; })}</div></div><label className="folder-select"><span>Choose Stash</span><select value={destinationFolderId} onChange={(event) => setDestinationFolderId(event.target.value)}>{folders.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.icon} {candidate.name}</option>)}</select></label>{sampling && <p className="colour-sampling-help">Click the item to sample a colour.</p>}<div className="step-actions"><button className="btn btn-quiet" type="button" onClick={() => setStep(2)}>Back</button><button className="btn btn-orange" type="submit">Save Item</button></div></section>}
+    {step === 3 && <section className="item-step"><div className={`colour-sampling-preview ${sampling ? 'is-sampling' : ''}`}><img ref={samplingImageRef} className="details-thumbnail" src={processed} alt="Prepared item thumbnail" />{sampling && <button className="sampling-eyedropper" type="button" style={{ '--sample-x': samplingPosition.x, '--sample-y': samplingPosition.y }} onPointerDown={beginSamplingEyedropper} onPointerMove={(event) => samplingDragRef.current && moveSamplingEyedropper(event)} onPointerUp={finishSamplingEyedropper} onPointerCancel={() => { samplingDragRef.current = false; }} aria-label="Drag to a colour, then release to sample it"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.7 3.3 6 6-3 3-1.5-1.5-6.7 6.7-2.4.6.6-2.4 6.7-6.7-1.5-1.5 2.8-2.8ZM5.7 17.3l1 1-2.9 2.9a2 2 0 0 1-2.8-2.8l2.9-2.9 1 1 .8-.8Z" /></svg></button>}</div><div className="details-primary-fields"><label><span className="field-label">Item name <span className="required-marker" aria-hidden="true">*</span></span><input className="field" name="name" required maxLength="60" placeholder="e.g. Colourful Poster" value={details.name} onChange={(event) => setDetails((current) => ({ ...current, name: event.target.value }))} autoFocus /></label><label>Material<input className="field" name="material" maxLength="60" placeholder="e.g. Plastic, paper" value={details.material} onChange={(event) => setDetails((current) => ({ ...current, material: event.target.value }))} /></label></div><label>Notes<textarea className="field textarea" name="notes" maxLength="250" placeholder="What catches your eye?" value={details.notes} onChange={(event) => setDetails((current) => ({ ...current, notes: event.target.value }))} /></label><div className="colour-picker" aria-label="Item colours"><button className="eyedropper-btn" type="button" onClick={pickColor} disabled={!selectedColor && colors.length >= 3} aria-label={selectedColor ? `Change ${selectedColor}` : 'Add a colour from the item'} title={selectedColor ? `Change ${selectedColor}` : 'Add a colour from the item'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.7 3.3 6 6-3 3-1.5-1.5-6.7 6.7-2.4.6.6-2.4 6.7-6.7-1.5-1.5 2.8-2.8ZM5.7 17.3l1 1-2.9 2.9a2 2 0 0 1-2.8-2.8l2.9-2.9 1 1 .8-.8Z" /></svg></button><div className="item-colours">{Array.from({ length: 3 }, (_, index) => { const color = colors[index]; const tone = color ? swatchTone(color) : ''; return color ? <button type="button" key={color} className={`item-colour-chip ${tone} ${selectedColor === color ? 'selected' : ''}`} style={{ '--chip': color, '--chip-text': contrastingTextColor(color) }} onClick={() => setSelectedColor((current) => current === color ? '' : color)} aria-pressed={selectedColor === color} aria-label={`${selectedColor === color ? 'Unselect' : 'Select'} ${color}`}><span>{color}</span><span className="swatch-remove" role="button" tabIndex="0" aria-label={`Delete ${color}`} onClick={(event) => { event.stopPropagation(); removeColor(color); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); removeColor(color); } }}>×</span></button> : <span key={`colour-slot-${index}`} className="item-colour-chip empty">Colour {index + 1}</span>; })}</div></div><label className="folder-select"><span>Choose Stash</span><select value={destinationFolderId} onChange={(event) => setDestinationFolderId(event.target.value)}>{folders.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.icon} {candidate.name}</option>)}</select></label>{sampling && <p className="colour-sampling-help">Drag the eyedropper over the item, then lift your finger to sample.</p>}<div className="step-actions"><button className="btn btn-quiet" type="button" onClick={() => setStep(2)}>Back</button><button className="btn btn-orange" type="submit">Save Item</button></div></section>}
   </form></div>;
 }
 

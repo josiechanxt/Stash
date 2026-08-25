@@ -21,6 +21,7 @@
   --type-name: 18px;
   --type-supporting: 14px;
   --swatch-label-inset: 0 8px;
+  --folder-art-ratio: 83 / 56;
 }
 * {
   box-sizing: border-box;
@@ -284,7 +285,7 @@ label {
   font-weight: 400;
   font-size: var(--type-name);
   line-height: 19px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
 }
 .folder-card small {
   width: 100%;
@@ -298,7 +299,8 @@ label {
 .folder-art {
   position: relative;
   width: 100%;
-  height: 112px;
+  aspect-ratio: var(--folder-art-ratio);
+  height: auto;
   overflow: visible;
   isolation: isolate;
   background: transparent;
@@ -504,7 +506,7 @@ label {
     400 34px/0.95 Tanker,
     Impact,
     sans-serif;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.04rem;
 }
 .collection-count {
   margin: 5px 0 24px;
@@ -734,7 +736,7 @@ label {
   gap: 12px;
   color: var(--muted);
   font: 400 14px/1 Tanker, Impact, sans-serif;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.04rem;
   text-transform: uppercase;
 }
 .detail-meta span + span::before {
@@ -764,7 +766,7 @@ label {
   background: var(--chip);
   color: var(--chip-text);
   font: 400 14px/1 Tanker, Impact, sans-serif;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.04rem;
   text-align: center;
   white-space: nowrap;
   text-shadow: none;
@@ -808,6 +810,7 @@ label {
 }
 .modal h2 {
   text-align: center;
+  letter-spacing: 0.04rem;
 }
 .confirm-modal {
   width: min(340px, 100%);
@@ -859,7 +862,8 @@ label {
   right: 15px;
 }
 .folder-preview {
-  width: min(166px, calc((100% - 18px) / 2));
+  /* Match a home-screen folder column: screen padding (52px) plus the grid gap. */
+  width: min(166px, calc((100vw - 70px) / 2));
   margin: 0 auto 2px;
 }
 .folder-preview .folder-art {
@@ -868,6 +872,7 @@ label {
 .folder-picker {
   display: grid;
   gap: 9px;
+  margin-bottom: 8px;
 }
 .folder-picker p {
   margin: 0;
@@ -885,6 +890,10 @@ label {
 .folder-modal .swatch {
   width: 32px;
   height: 32px;
+}
+.folder-modal .btn-orange {
+  font-family: Erode, Georgia, serif;
+  font-weight: 550;
 }
 .stash-name-fields {
   display: grid;
@@ -1023,7 +1032,7 @@ label {
 .item-stepper {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1036,7 +1045,7 @@ label {
   gap: 5px;
   color: #9c9c9c;
   font: 400 14px/1 Tanker, Impact, sans-serif;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.03rem;
 }
 .item-stepper span {
   display: grid;
@@ -1310,7 +1319,7 @@ label {
 }
 .canvas-loading strong {
   font: 400 18px/1 Tanker, Impact, sans-serif;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.01rem;
   text-transform: uppercase;
 }
 .canvas-loading small {
@@ -1526,6 +1535,55 @@ label {
   margin: 0 auto;
   object-fit: contain;
 }
+.colour-sampling-preview {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+}
+.colour-sampling-preview .details-thumbnail {
+  margin: 0;
+}
+.colour-sampling-preview.is-sampling .details-thumbnail {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+.sampling-eyedropper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  place-items: center;
+  overflow: hidden;
+  border: 3px solid #000;
+  border-radius: 50%;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: 900%;
+  color: #000;
+  box-shadow: 0 2px 0 #000, 0 0 0 3px rgb(255 255 255 / 0.82);
+  cursor: grab;
+  touch-action: none;
+  transform: translate(-50%, -50%);
+}
+.sampling-eyedropper:active {
+  cursor: grabbing;
+}
+.sampling-eyedropper svg {
+  display: none;
+  pointer-events: none;
+}
+.sampling-eyedropper::after {
+  width: 13px;
+  height: 13px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #000;
+  content: "";
+}
 .details-primary-fields {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1622,7 +1680,7 @@ label {
   background: var(--chip);
   color: var(--chip-text);
   font: 400 14px/1 Tanker, Impact, sans-serif;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.03rem;
   text-align: center;
   white-space: nowrap;
   cursor: pointer;
@@ -1668,9 +1726,7 @@ label {
   pointer-events: auto;
 }
 .colour-sampling-help {
-  margin: -5px 0 0;
-  color: #666;
-  font-size: 13px;
+  display: none;
 }
 .details-thumbnail.is-sampling {
   cursor: crosshair;

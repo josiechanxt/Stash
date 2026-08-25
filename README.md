@@ -39,12 +39,12 @@ npm run preview
 
 ## Project structure
 
-- `src/App.jsx` — React UI, navigation, local storage, search, and creation flows.
+- `src/App.jsx` — React UI, navigation, search, and creation flows.
 - `src/main.jsx` — React application entry point.
 - `styles.css` — shared visual styling, including the folder glass treatment.
 - `assets/` — fonts and starter item images.
 
-Folder and item data are stored in your browser's local storage under `stash-folders-v2`.
+Each visit begins at the landing page with an empty library. Folders and items exist only for the active browser session.
 
 ## Background removal
 
