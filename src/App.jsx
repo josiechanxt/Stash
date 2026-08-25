@@ -1,17 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { removeBackground as imglyRemoveBackground } from '@imgly/background-removal';
+import logo from '../assets/Stash..svg';
+import cupSleeve from '../assets/cup-sleeve.png';
+import fries from '../assets/fries.png';
+import poiful from '../assets/poiful.png';
+import pretzel from '../assets/pretzel.png';
 
-const asset = (name) => `/assets/${name}`;
 const storageKey = 'stash-folders-v2';
 const folderColors = ['#D00000', '#11922B', '#004DAA', '#c5ab68', '#111111', '#E45F00'];
 const folderPickerColors = ['#F39294', '#91D99A', '#82B2DD', '#EFD99B', '#8d8d8d', '#FFAD7C'];
 const starter = [
   { id: 'food', name: 'Food Packaging', color: folderColors[0], icon: '🍔', items: [
-    { id: 'fries', name: 'McDonald fries', material: 'Paper', notes: 'Bright red packaging with a classic, instantly recognisable silhouette.', src: asset('fries.png'), colors: ['#E21B23', '#F5C400', '#FFFFFF'] },
-    { id: 'poiful', name: 'Poiful packaging', material: 'Plastic', notes: 'A compact packet with playful lettering.', src: asset('poiful.png'), colors: ['#DF3F95', '#F8D643', '#FFFFFF'] },
-    { id: 'pretzel', name: 'Pretzel packet', material: 'Plastic', notes: 'Warm colours and a small snack-sized form.', src: asset('pretzel.png'), colors: ['#F1A542', '#723C22', '#F7E8CD'] },
+    { id: 'fries', name: 'McDonald fries', material: 'Paper', notes: 'Bright red packaging with a classic, instantly recognisable silhouette.', src: fries, colors: ['#E21B23', '#F5C400', '#FFFFFF'] },
+    { id: 'poiful', name: 'Poiful packaging', material: 'Plastic', notes: 'A compact packet with playful lettering.', src: poiful, colors: ['#DF3F95', '#F8D643', '#FFFFFF'] },
+    { id: 'pretzel', name: 'Pretzel packet', material: 'Plastic', notes: 'Warm colours and a small snack-sized form.', src: pretzel, colors: ['#F1A542', '#723C22', '#F7E8CD'] },
   ] },
-  { id: 'cups', name: 'Cup Sleeves', color: folderColors[1], icon: '🥤', items: [{ id: 'sleeve', name: 'Coffee cup sleeve', material: 'Kraft paper', notes: 'A reusable paper sleeve with strong graphic contrast.', src: asset('cup-sleeve.png'), colors: ['#1D6B41', '#DCC8A5', '#FFFFFF'] }] },
+  { id: 'cups', name: 'Cup Sleeves', color: folderColors[1], icon: '🥤', items: [{ id: 'sleeve', name: 'Coffee cup sleeve', material: 'Kraft paper', notes: 'A reusable paper sleeve with strong graphic contrast.', src: cupSleeve, colors: ['#1D6B41', '#DCC8A5', '#FFFFFF'] }] },
   { id: 'cute', name: 'Cute Characters', color: folderColors[2], icon: '🧸', items: [] },
   { id: 'postcards', name: 'Postcards', color: folderColors[3], icon: '🌅', items: [] },
   { id: 'keychains', name: 'Keychains', color: folderColors[4], icon: '🔑', items: [] },
@@ -79,7 +83,7 @@ function Home({ folders, search, setSearch, openFolder, openItem, openFolderModa
     });
   }, [folders, search]);
   return <section className={`screen ${matches ? 'search-screen' : 'home-screen'}`}>
-    <div className="intro"><img className="brand-logo" src={asset('Stash..svg')} alt="Stash" /><div className="actions"><button className="btn btn-dark" onClick={openFolderModal}>Create Stash</button><button className="btn btn-orange" onClick={openItemModal}>Add Item</button></div><SearchBox value={search} onChange={setSearch} /></div>
+    <div className="intro"><img className="brand-logo" src={logo} alt="Stash" /><div className="actions"><button className="btn btn-dark" onClick={openFolderModal}>Create Stash</button><button className="btn btn-orange" onClick={openItemModal}>Add Item</button></div><SearchBox value={search} onChange={setSearch} /></div>
     {matches ? <><p className="result-count">{matches.length} {matches.length === 1 ? 'Result' : 'Results'}</p><div className="search-grid">{matches.length ? matches.map((item) => <button key={`${item.folder.id}-${item.id}`} className="search-result" onClick={() => openItem(item.folder.id, item.id)}><img src={item.src} alt={item.name} /><span>{item.name}</span></button>) : <p className="empty">No items match that search.</p>}</div></> : <div className="folder-grid">{folders.map((folder) => <button key={folder.id} className="folder-card" onClick={() => openFolder(folder.id)}><FolderArt folder={folder} /><strong>{folder.name}</strong><small>{folder.items.length} {folder.items.length === 1 ? 'item' : 'items'}</small></button>)}</div>}
   </section>;
 }
