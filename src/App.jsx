@@ -1,9 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { removeBackground as imglyRemoveBackground } from '@imgly/background-removal';
+import landingLogo from '../assets/Stash2.svg';
+import landingFrame1 from '../assets/Asset 01.svg';
+import landingFrame2 from '../assets/Asset 02.svg';
+import landingFrame3 from '../assets/Asset 03.svg';
+import landingFrame4 from '../assets/Asset 04.svg';
+import landingFrame5 from '../assets/Asset 05.svg';
+import landingFrame6 from '../assets/Asset 06.svg';
+import landingFrame7 from '../assets/Asset 07.svg';
+import landingFrame8 from '../assets/Asset 08.svg';
+import landingFrame9 from '../assets/Asset 09.svg';
 
-const storageKey = 'stash-folders-v3';
+const storageKey = 'stash-folders-v4';
 const folderColors = ['#D00000', '#11922B', '#004DAA', '#c5ab68', '#111111', '#E45F00'];
 const folderPickerColors = ['#F39294', '#91D99A', '#82B2DD', '#EFD99B', '#8d8d8d', '#FFAD7C'];
+const landingFrames = [landingFrame1, landingFrame2, landingFrame3, landingFrame4, landingFrame5, landingFrame6, landingFrame7, landingFrame8, landingFrame9];
 
 const channels = (hex, shade = 1) => {
   const value = Number.parseInt(hex.slice(1), 16);
@@ -55,6 +66,15 @@ function SearchBox({ value, onChange }) {
   return <label className="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Search" value={value} onChange={(event) => onChange(event.target.value)} autoComplete="off" aria-label="Search stashes and items" /></label>;
 }
 
+function Landing({ onEnter }) {
+  return <main className="landing-screen">
+    <div className="landing-brand"><img src={landingLogo} alt="Stash" /></div>
+    <div className="landing-art" aria-hidden="true">{landingFrames.map((frame, index) => <img key={frame} src={frame} alt="" style={{ '--frame-index': index }} />)}</div>
+    <p className="landing-message">Turn physical inspiration<br />into digital artefacts.</p>
+    <button className="landing-cta" type="button" onClick={onEnter}>Let’s Stash</button>
+  </main>;
+}
+
 function Home({ folders, search, setSearch, openFolder, openItem, openFolderModal, openItemModal }) {
   const matches = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -66,7 +86,7 @@ function Home({ folders, search, setSearch, openFolder, openItem, openFolderModa
     });
   }, [folders, search]);
   return <section className={`screen ${matches ? 'search-screen' : 'home-screen'}`}>
-    <div className="intro"><img className="brand-logo" src={`${import.meta.env.BASE_URL}stash.svg`} alt="Stash" /><div className="actions"><button className="btn btn-dark" onClick={openFolderModal}>Create Stash</button><button className="btn btn-orange" onClick={openItemModal}>Add Item</button></div><SearchBox value={search} onChange={setSearch} /></div>
+    <div className="intro"><img className="brand-logo" src={`${import.meta.env.BASE_URL}stash.svg`} alt="Stash" /><div className="actions"><button className="btn btn-dark" onClick={openFolderModal}>Create Stash</button>{folders.length > 0 && <button className="btn btn-orange" onClick={openItemModal}>Add Item</button>}</div><SearchBox value={search} onChange={setSearch} /></div>
     {matches ? <><p className="result-count">{matches.length} {matches.length === 1 ? 'Result' : 'Results'}</p><div className="search-grid">{matches.length ? matches.map((item) => <button key={`${item.folder.id}-${item.id}`} className="search-result" onClick={() => openItem(item.folder.id, item.id)}><img src={item.src} alt={item.name} /><span>{item.name}</span></button>) : <p className="empty">No items match that search.</p>}</div></> : <div className="folder-grid">{folders.length ? folders.map((folder) => <button key={folder.id} className="folder-card" onClick={() => openFolder(folder.id)}><FolderArt folder={folder} /><strong>{folder.name}</strong><small>{folder.items.length} {folder.items.length === 1 ? 'item' : 'items'}</small></button>) : <p className="empty">Empty for now. Add your first stash!</p>}</div>}
   </section>;
 }
@@ -512,7 +532,7 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
     {step === 1 && <section className="item-step">
       {!source && <div className={`upload-zone ${isDragging ? 'dragging' : ''}`} onDragEnter={(event) => { event.preventDefault(); setIsDragging(true); }} onDragOver={(event) => event.preventDefault()} onDragLeave={() => setIsDragging(false)} onDrop={drop}>
         <strong>{isDragging ? 'Drop it here' : 'Drop a packaging photo here'}</strong>
-        <small>PNG, JPG or WEBP</small>
+        <span className="upload-tip">(Best with plain background)</span>
         <input className="file-input" ref={fileInputRef} type="file" onChange={upload} accept="image/*" tabIndex="-1" aria-hidden="true" />
         <button className="upload-file-button" type="button" onClick={() => fileInputRef.current?.click()}>Choose file</button>
       </div>}
@@ -545,6 +565,7 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
 }
 
 export default function App() {
+  const [hasEntered, setHasEntered] = useState(false);
   const [folders, setFolders] = useState(() => { try { return JSON.parse(localStorage.getItem(storageKey)) || []; } catch { return []; } });
   const [page, setPage] = useState('home'); const [folderId, setFolderId] = useState('food'); const [itemId, setItemId] = useState('fries'); const [search, setSearch] = useState(''); const [modal, setModal] = useState(''); const [itemFolderSpecific, setItemFolderSpecific] = useState(false);
   useEffect(() => localStorage.setItem(storageKey, JSON.stringify(folders)), [folders]);
@@ -569,5 +590,6 @@ export default function App() {
   };
   const deleteFolder = (id) => { setFolders((current) => current.filter((candidate) => candidate.id !== id)); setModal(''); setSearch(''); setPage('home'); };
   const deleteItem = (id) => { setFolders((current) => current.map((candidate) => candidate.id === folder.id ? { ...candidate, items: candidate.items.filter((entry) => entry.id !== id) } : candidate)); setModal(''); setPage('collection'); };
+  if (!hasEntered) return <Landing onEnter={() => setHasEntered(true)} />;
   return <><GridWarpFilter />{page === 'collection' ? <Collection folder={folder} onBack={() => setPage('home')} openItem={openItem} openItemModal={() => openItemModal(true)} openEditModal={() => setModal('edit-folder')} openDeleteModal={() => setModal('delete-folder')} /> : page === 'detail' && item ? <Detail folder={folder} item={item} onBack={() => setPage('collection')} openEditItemModal={() => setModal('edit-item')} openDeleteItemModal={() => setModal('delete-item')} /> : <Home folders={folders} search={search} setSearch={setSearch} openFolder={openFolder} openItem={openItem} openFolderModal={() => setModal('folder')} openItemModal={() => openItemModal(false)} />}{modal === 'folder' && <FolderModal close={() => setModal('')} createFolder={createFolder} />}{modal === 'edit-folder' && folder && <FolderModal close={() => setModal('')} folder={folder} updateFolder={updateFolder} />}{modal === 'item' && <ItemModal folder={folder} folders={folders} isFolderSpecific={itemFolderSpecific} close={() => setModal('')} createItem={createItem} />}{modal === 'edit-item' && item && <ItemEditModal item={item} folder={folder} folders={folders} close={() => setModal('')} updateItem={updateItem} />}{modal === 'delete-folder' && folder && <DeleteFolderModal folder={folder} close={() => setModal('')} deleteFolder={deleteFolder} />}{modal === 'delete-item' && item && <DeleteItemModal item={item} close={() => setModal('')} deleteItem={deleteItem} />}</>;
 }
