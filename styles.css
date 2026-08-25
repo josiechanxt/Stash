@@ -184,10 +184,6 @@ label {
   align-items: center;
   gap: 13px;
 }
-.home-screen .actions .btn,
-.search-screen .actions .btn {
-  font-size: 16px;
-}
 .btn {
   border: 0;
   border-radius: 8px;
@@ -201,6 +197,14 @@ label {
     serif;
   letter-spacing: -0.9px;
   cursor: pointer;
+}
+.primary-action {
+  display: inline-flex;
+  min-height: 0;
+  padding: 8px 12px 10px;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 .btn-orange {
   background: var(--orange);
@@ -860,7 +864,7 @@ label {
   font-family: Tanker, Impact, "Arial Narrow", sans-serif;
   font-size: 15px;
   font-weight: 400;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 .folder-modal .swatches {
@@ -868,8 +872,8 @@ label {
   gap: 10px;
 }
 .folder-modal .swatch {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
 }
 .emoji-picker {
   display: grid;
@@ -906,7 +910,7 @@ label {
   margin: -8px 0 2px;
   color: var(--muted);
   text-align: center;
-  font-size: 15px;
+  font-size: 16px;
 }
 .field {
   width: 100%;
@@ -962,6 +966,7 @@ label {
 .item-modal {
   width: min(420px, 100%);
   max-height: calc(100dvh - 48px);
+  align-content: start;
   overflow-y: auto;
   padding: 36px;
   border-radius: 26px;
@@ -987,7 +992,7 @@ label {
   align-items: center;
   gap: 5px;
   color: #9c9c9c;
-  font: 400 11px/1 Tanker, Impact, sans-serif;
+  font: 400 14px/1 Tanker, Impact, sans-serif;
   letter-spacing: 0.1rem;
 }
 .item-stepper span {
