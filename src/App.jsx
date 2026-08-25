@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { removeBackground as imglyRemoveBackground } from '@imgly/background-removal';
-import logo from '../assets/Stash..svg';
 import cupSleeve from '../assets/cup-sleeve.png';
 import fries from '../assets/fries.png';
 import poiful from '../assets/poiful.png';
@@ -97,7 +96,7 @@ function Home({ folders, search, setSearch, openFolder, openItem, openFolderModa
     });
   }, [folders, search]);
   return <section className={`screen ${matches ? 'search-screen' : 'home-screen'}`}>
-    <div className="intro"><img className="brand-logo" src={logo} alt="Stash" /><div className="actions"><button className="btn btn-dark" onClick={openFolderModal}>Create Stash</button><button className="btn btn-orange" onClick={openItemModal}>Add Item</button></div><SearchBox value={search} onChange={setSearch} /></div>
+    <div className="intro"><img className="brand-logo" src={`${import.meta.env.BASE_URL}stash.svg`} alt="Stash" /><div className="actions"><button className="btn btn-dark" onClick={openFolderModal}>Create Stash</button><button className="btn btn-orange" onClick={openItemModal}>Add Item</button></div><SearchBox value={search} onChange={setSearch} /></div>
     {matches ? <><p className="result-count">{matches.length} {matches.length === 1 ? 'Result' : 'Results'}</p><div className="search-grid">{matches.length ? matches.map((item) => <button key={`${item.folder.id}-${item.id}`} className="search-result" onClick={() => openItem(item.folder.id, item.id)}><img src={item.src} alt={item.name} /><span>{item.name}</span></button>) : <p className="empty">No items match that search.</p>}</div></> : <div className="folder-grid">{folders.map((folder) => <button key={folder.id} className="folder-card" onClick={() => openFolder(folder.id)}><FolderArt folder={folder} /><strong>{folder.name}</strong><small>{folder.items.length} {folder.items.length === 1 ? 'item' : 'items'}</small></button>)}</div>}
   </section>;
 }
