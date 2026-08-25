@@ -1,39 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { removeBackground as imglyRemoveBackground } from '@imgly/background-removal';
-import cupSleeve from '../assets/cup-sleeve.png';
-import fries from '../assets/fries.png';
-import poiful from '../assets/poiful.png';
-import pretzel from '../assets/pretzel.png';
 
-const storageKey = 'stash-folders-v2';
-const bundledAssets = {
-  'cup-sleeve.png': cupSleeve,
-  'fries.png': fries,
-  'poiful.png': poiful,
-  'pretzel.png': pretzel,
-};
-const restoreBundledAsset = (src) => {
-  const filename = typeof src === 'string' ? src.split('?')[0].split('/').pop() : '';
-  return bundledAssets[filename] || src;
-};
-const restoreBundledAssets = (folders) => folders.map((folder) => ({
-  ...folder,
-  items: folder.items.map((item) => ({ ...item, src: restoreBundledAsset(item.src) })),
-}));
+const storageKey = 'stash-folders-v3';
 const folderColors = ['#D00000', '#11922B', '#004DAA', '#c5ab68', '#111111', '#E45F00'];
 const folderPickerColors = ['#F39294', '#91D99A', '#82B2DD', '#EFD99B', '#8d8d8d', '#FFAD7C'];
-const starter = [
-  { id: 'food', name: 'Food Packaging', color: folderColors[0], icon: '🍔', items: [
-    { id: 'fries', name: 'McDonald fries', material: 'Paper', notes: 'Bright red packaging with a classic, instantly recognisable silhouette.', src: fries, colors: ['#E21B23', '#F5C400', '#FFFFFF'] },
-    { id: 'poiful', name: 'Poiful packaging', material: 'Plastic', notes: 'A compact packet with playful lettering.', src: poiful, colors: ['#DF3F95', '#F8D643', '#FFFFFF'] },
-    { id: 'pretzel', name: 'Pretzel packet', material: 'Plastic', notes: 'Warm colours and a small snack-sized form.', src: pretzel, colors: ['#F1A542', '#723C22', '#F7E8CD'] },
-  ] },
-  { id: 'cups', name: 'Cup Sleeves', color: folderColors[1], icon: '🥤', items: [{ id: 'sleeve', name: 'Coffee cup sleeve', material: 'Kraft paper', notes: 'A reusable paper sleeve with strong graphic contrast.', src: cupSleeve, colors: ['#1D6B41', '#DCC8A5', '#FFFFFF'] }] },
-  { id: 'cute', name: 'Cute Characters', color: folderColors[2], icon: '🧸', items: [] },
-  { id: 'postcards', name: 'Postcards', color: folderColors[3], icon: '🌅', items: [] },
-  { id: 'keychains', name: 'Keychains', color: folderColors[4], icon: '🔑', items: [] },
-  { id: 'stamps', name: 'Stamps', color: folderColors[5], icon: '💌', items: [] },
-];
 
 const channels = (hex, shade = 1) => {
   const value = Number.parseInt(hex.slice(1), 16);
@@ -97,7 +67,7 @@ function Home({ folders, search, setSearch, openFolder, openItem, openFolderModa
   }, [folders, search]);
   return <section className={`screen ${matches ? 'search-screen' : 'home-screen'}`}>
     <div className="intro"><img className="brand-logo" src={`${import.meta.env.BASE_URL}stash.svg`} alt="Stash" /><div className="actions"><button className="btn btn-dark" onClick={openFolderModal}>Create Stash</button><button className="btn btn-orange" onClick={openItemModal}>Add Item</button></div><SearchBox value={search} onChange={setSearch} /></div>
-    {matches ? <><p className="result-count">{matches.length} {matches.length === 1 ? 'Result' : 'Results'}</p><div className="search-grid">{matches.length ? matches.map((item) => <button key={`${item.folder.id}-${item.id}`} className="search-result" onClick={() => openItem(item.folder.id, item.id)}><img src={item.src} alt={item.name} /><span>{item.name}</span></button>) : <p className="empty">No items match that search.</p>}</div></> : <div className="folder-grid">{folders.map((folder) => <button key={folder.id} className="folder-card" onClick={() => openFolder(folder.id)}><FolderArt folder={folder} /><strong>{folder.name}</strong><small>{folder.items.length} {folder.items.length === 1 ? 'item' : 'items'}</small></button>)}</div>}
+    {matches ? <><p className="result-count">{matches.length} {matches.length === 1 ? 'Result' : 'Results'}</p><div className="search-grid">{matches.length ? matches.map((item) => <button key={`${item.folder.id}-${item.id}`} className="search-result" onClick={() => openItem(item.folder.id, item.id)}><img src={item.src} alt={item.name} /><span>{item.name}</span></button>) : <p className="empty">No items match that search.</p>}</div></> : <div className="folder-grid">{folders.length ? folders.map((folder) => <button key={folder.id} className="folder-card" onClick={() => openFolder(folder.id)}><FolderArt folder={folder} /><strong>{folder.name}</strong><small>{folder.items.length} {folder.items.length === 1 ? 'item' : 'items'}</small></button>) : <p className="empty">Empty for now. Add your first stash!</p>}</div>}
   </section>;
 }
 
@@ -575,7 +545,7 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
 }
 
 export default function App() {
-  const [folders, setFolders] = useState(() => { try { const saved = JSON.parse(localStorage.getItem(storageKey)); return saved ? restoreBundledAssets(saved) : starter; } catch { return starter; } });
+  const [folders, setFolders] = useState(() => { try { return JSON.parse(localStorage.getItem(storageKey)) || []; } catch { return []; } });
   const [page, setPage] = useState('home'); const [folderId, setFolderId] = useState('food'); const [itemId, setItemId] = useState('fries'); const [search, setSearch] = useState(''); const [modal, setModal] = useState(''); const [itemFolderSpecific, setItemFolderSpecific] = useState(false);
   useEffect(() => localStorage.setItem(storageKey, JSON.stringify(folders)), [folders]);
   const folder = findFolder(folders, folderId) || folders[0]; const item = folder?.items.find((entry) => entry.id === itemId) || folder?.items[0];
