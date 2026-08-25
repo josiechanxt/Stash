@@ -7,6 +7,20 @@ import poiful from '../assets/poiful.png';
 import pretzel from '../assets/pretzel.png';
 
 const storageKey = 'stash-folders-v2';
+const bundledAssets = {
+  'cup-sleeve.png': cupSleeve,
+  'fries.png': fries,
+  'poiful.png': poiful,
+  'pretzel.png': pretzel,
+};
+const restoreBundledAsset = (src) => {
+  const filename = typeof src === 'string' ? src.split('?')[0].split('/').pop() : '';
+  return bundledAssets[filename] || src;
+};
+const restoreBundledAssets = (folders) => folders.map((folder) => ({
+  ...folder,
+  items: folder.items.map((item) => ({ ...item, src: restoreBundledAsset(item.src) })),
+}));
 const folderColors = ['#D00000', '#11922B', '#004DAA', '#c5ab68', '#111111', '#E45F00'];
 const folderPickerColors = ['#F39294', '#91D99A', '#82B2DD', '#EFD99B', '#8d8d8d', '#FFAD7C'];
 const starter = [
@@ -562,7 +576,7 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
 }
 
 export default function App() {
-  const [folders, setFolders] = useState(() => { try { return JSON.parse(localStorage.getItem(storageKey)) || starter; } catch { return starter; } });
+  const [folders, setFolders] = useState(() => { try { const saved = JSON.parse(localStorage.getItem(storageKey)); return saved ? restoreBundledAssets(saved) : starter; } catch { return starter; } });
   const [page, setPage] = useState('home'); const [folderId, setFolderId] = useState('food'); const [itemId, setItemId] = useState('fries'); const [search, setSearch] = useState(''); const [modal, setModal] = useState(''); const [itemFolderSpecific, setItemFolderSpecific] = useState(false);
   useEffect(() => localStorage.setItem(storageKey, JSON.stringify(folders)), [folders]);
   const folder = findFolder(folders, folderId) || folders[0]; const item = folder?.items.find((entry) => entry.id === itemId) || folder?.items[0];
