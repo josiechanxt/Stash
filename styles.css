@@ -476,14 +476,25 @@ label {
   color: #c51d27;
 }
 .round-btn {
-  width: 40px;
-  height: 40px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
   border: 0;
   border-radius: 50%;
-  background: #000;
-  color: #fff;
-  font-size: 24px;
+  background: transparent;
+  color: #000;
   cursor: pointer;
+}
+.back-arrow-icon {
+  width: 25px;
+  height: 25px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4.5;
 }
 .collection-screen h2,
 .detail-copy h2,
@@ -875,27 +886,59 @@ label {
   width: 32px;
   height: 32px;
 }
-.emoji-picker {
+.stash-name-fields {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: minmax(0, 1fr) 48px;
   gap: 8px;
 }
-.emoji-option {
+.emoji-control {
+  position: relative;
+}
+.emoji-button {
   display: grid;
   width: 100%;
-  aspect-ratio: 1;
-  padding: 0;
+  height: 39px;
+  padding: 4px;
   place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  font-size: 23px;
+  border: 1px solid #000;
+  border-radius: 8px;
+  background: #fff;
+  font-family: system-ui, sans-serif;
+  font-size: 22px;
   cursor: pointer;
 }
-.emoji-option.selected {
-  outline: 2px solid #000;
-  outline-offset: 2px;
-  background: #f5f5f5;
+.emoji-button:focus-visible {
+  outline: 2px solid #2769dc;
+  outline-offset: 1px;
+}
+.emoji-picker-popover {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  width: 216px;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 0.14);
+}
+.emoji-picker-popover button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+.emoji-picker-popover button:hover,
+.emoji-picker-popover button[aria-selected="true"] {
+  background: #f0f0f0;
 }
 .modal label {
   display: grid;
