@@ -11,7 +11,9 @@ import landingFrame7 from '../assets/Asset 07.svg';
 import landingFrame8 from '../assets/Asset 08.svg';
 import landingFrame9 from '../assets/Asset 09.svg';
 
-const storageKey = 'stash-folders-v4';
+// A new storage namespace ensures prior demo or pre-landing libraries do not
+// appear for visitors opening this release for the first time.
+const storageKey = 'stash-folders-v5';
 const folderColors = ['#D00000', '#11922B', '#004DAA', '#c5ab68', '#111111', '#E45F00'];
 const folderPickerColors = ['#F39294', '#91D99A', '#82B2DD', '#EFD99B', '#8d8d8d', '#FFAD7C'];
 const landingFrames = [landingFrame1, landingFrame2, landingFrame3, landingFrame4, landingFrame5, landingFrame6, landingFrame7, landingFrame8, landingFrame9];
@@ -567,7 +569,7 @@ function ItemModal({ folder, folders, isFolderSpecific, close, createItem }) {
 export default function App() {
   const [hasEntered, setHasEntered] = useState(false);
   const [folders, setFolders] = useState(() => { try { return JSON.parse(localStorage.getItem(storageKey)) || []; } catch { return []; } });
-  const [page, setPage] = useState('home'); const [folderId, setFolderId] = useState('food'); const [itemId, setItemId] = useState('fries'); const [search, setSearch] = useState(''); const [modal, setModal] = useState(''); const [itemFolderSpecific, setItemFolderSpecific] = useState(false);
+  const [page, setPage] = useState('home'); const [folderId, setFolderId] = useState(''); const [itemId, setItemId] = useState(''); const [search, setSearch] = useState(''); const [modal, setModal] = useState(''); const [itemFolderSpecific, setItemFolderSpecific] = useState(false);
   useEffect(() => localStorage.setItem(storageKey, JSON.stringify(folders)), [folders]);
   const folder = findFolder(folders, folderId) || folders[0]; const item = folder?.items.find((entry) => entry.id === itemId) || folder?.items[0];
   const openFolder = (id) => { setFolderId(id); setSearch(''); setPage('collection'); };

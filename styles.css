@@ -6,7 +6,8 @@
   font-display: swap;
 }
 @font-face {
-  font-family: "Tanker Folder";
+  /* Match the family name used throughout the UI. */
+  font-family: Tanker;
   src: url("https://cdn.fontshare.com/wf/ATKS7EHYU4PKFTXRA4UFAHPY7XS75QMY/OYTCFLQCR7FVKK7FIO7TCJPY4YG22I3S/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
@@ -30,6 +31,10 @@ body {
   color: var(--ink);
   font-family: Erode, Georgia, serif;
   font-weight: 400;
+}
+html:has(.landing-screen),
+body:has(.landing-screen) {
+  background: var(--orange);
 }
 .landing-screen {
   --landing-orange: #ff8248;
@@ -179,7 +184,8 @@ label {
   align-items: center;
   gap: 13px;
 }
-.home-screen .actions .btn {
+.home-screen .actions .btn,
+.search-screen .actions .btn {
   font-size: 16px;
 }
 .btn {
