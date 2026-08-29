@@ -8,7 +8,8 @@
 @font-face {
   /* Match the family name used throughout the UI. */
   font-family: Tanker;
-  src: url("https://cdn.fontshare.com/wf/ATKS7EHYU4PKFTXRA4UFAHPY7XS75QMY/OYTCFLQCR7FVKK7FIO7TCJPY4YG22I3S/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.woff2") format("woff2");
+  src: url("https://cdn.fontshare.com/wf/ATKS7EHYU4PKFTXRA4UFAHPY7XS75QMY/OYTCFLQCR7FVKK7FIO7TCJPY4YG22I3S/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.woff2")
+    format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -84,14 +85,23 @@ body:has(.landing-screen) {
   animation-delay: calc(var(--frame-index) * 0.5s);
 }
 @keyframes landing-frame {
-  0%, 11.11% { opacity: 1; }
-  11.12%, 100% { opacity: 0; }
+  0%,
+  11.11% {
+    opacity: 1;
+  }
+  11.12%,
+  100% {
+    opacity: 0;
+  }
 }
 .landing-message {
   justify-self: center;
   max-width: 350px;
   margin: 0 0 clamp(40px, 7svh, 82px);
-  font: 400 clamp(36px, 4.7vw, 31px)/1.16 Erode, Georgia, serif;
+  font:
+    400 clamp(36px, 4.7vw, 31px)/1.16 Erode,
+    Georgia,
+    serif;
   letter-spacing: -0.045em;
 }
 .landing-cta {
@@ -103,21 +113,42 @@ body:has(.landing-screen) {
   border-radius: 12px;
   background: #000;
   color: #fff;
-  font: 400 clamp(22px, 4.4vw, 28px)/1 Erode, Georgia, serif;
+  font:
+    400 clamp(22px, 4.4vw, 28px)/1 Erode,
+    Georgia,
+    serif;
   letter-spacing: -0.06em;
   cursor: pointer;
-  transition: transform 0.18s ease, background 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease;
 }
-.landing-cta:hover { transform: translateY(-2px); }
-.landing-cta:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.landing-cta:hover {
+  transform: translateY(-2px);
+}
+.landing-cta:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+}
 @media (max-height: 720px) {
-  .landing-screen { padding-bottom: 24px; }
-  .landing-art { padding-top: 24px; padding-bottom: 20px; }
-  .landing-message { margin-bottom: 30px; }
-  .landing-cta { min-height: 44px; }
+  .landing-screen {
+    padding-bottom: 24px;
+  }
+  .landing-art {
+    padding-top: 24px;
+    padding-bottom: 20px;
+  }
+  .landing-message {
+    margin-bottom: 30px;
+  }
+  .landing-cta {
+    min-height: 44px;
+  }
 }
 @media (min-width: 768px) {
-  .landing-art { padding: 28px 4px 24px; }
+  .landing-art {
+    padding: 28px 4px 24px;
+  }
   .landing-art img {
     width: min(100%, 290px);
     max-height: min(36vh, 330px);
@@ -134,9 +165,262 @@ body:has(.landing-screen) {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .landing-cta { transition: none; }
-  .landing-art img { animation: none; }
-  .landing-art img:first-child { opacity: 1; }
+  .landing-cta {
+    transition: none;
+  }
+  .landing-art img {
+    animation: none;
+  }
+  .landing-art img:first-child {
+    opacity: 1;
+  }
+}
+
+/* Moodboard: dimensions and visual hierarchy follow Figma frame 131:789. */
+.moodboard-screen {
+  position: relative;
+  width: min(402px, 100%);
+  height: 100svh;
+  min-height: 640px;
+  padding: 70px 32px 0;
+  overflow: hidden;
+  background: #fff;
+}
+.moodboard-header {
+  justify-content: space-between;
+  height: 40px;
+}
+.figma-back {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.figma-back img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.moodboard-header > div:not(.moodboard-title) {
+  display: none;
+}
+.moodboard-save {
+  margin: 0;
+  padding: 8px 12px 10px;
+  border-radius: 8px;
+  font-size: 18px;
+  letter-spacing: -0.9px;
+}
+.moodboard-workspace {
+  position: absolute;
+  top: 125px;
+  right: 32px;
+  left: 32px;
+  padding: 0;
+}
+.moodboard-toolbar {
+  height: 42px;
+  margin: 0;
+  width: 100%;
+  justify-content: center;
+  border: 0;
+  border-radius: 12px;
+}
+.moodboard-toolbar > button,
+.shape-menu > button,
+.board-colour,
+.board-eyedropper {
+  width: 38px;
+  height: 42px;
+  border: 0;
+}
+.moodboard-toolbar > button img,
+.shape-menu > button img,
+.board-eyedropper img {
+  width: 24px;
+  height: 24px;
+}
+.board-colour span {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #fff;
+}
+.board-eyedropper span {
+  display: none;
+}
+.moodboard-canvas {
+  min-height: 580px;
+  margin-top: 19px;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 8px 12px 4px rgb(0 0 0 / 0.15);
+}
+.canvas-empty {
+  padding-bottom: 190px;
+}
+.canvas-empty b {
+  font-size: 23px;
+}
+.board-object.image {
+  width: 88px;
+  height: 88px;
+}
+.moodboard-drawer {
+  position: absolute;
+  z-index: 4;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: min(426px, 55svh);
+  min-height: 350px;
+  margin: 0;
+  padding: 29px 30px 30px;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -1px 6px 8px rgb(0 0 0 / 0.08);
+  transition: transform 0.26s cubic-bezier(0.2, 0.7, 0.2, 1);
+  touch-action: none;
+}
+.moodboard-drawer:not(.is-open) {
+  transform: translateY(calc(100% - 92px));
+}
+.drawer-grab {
+  display: grid;
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  width: 54px;
+  height: 26px;
+  padding: 0;
+  place-items: start center;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  transform: translateX(-50%);
+  touch-action: none;
+}
+.drawer-grab:active {
+  cursor: grabbing;
+}
+.drawer-grab span {
+  width: 31px;
+  height: 4px;
+  border-radius: 12px;
+  background: #000;
+  pointer-events: none;
+}
+.stash-tabs {
+  gap: 19px;
+  align-items: center;
+  min-height: 29px;
+  padding: 0 0 13px;
+}
+.stash-tabs button {
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #000;
+  font:
+    400 15px/1 Tanker,
+    Impact,
+    sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+.stash-tabs button.active {
+  padding: 4px;
+  background: #000;
+  color: #fff;
+}
+.drawer-empty-stashes {
+  margin: 18px 0 0;
+  color: #777;
+  text-align: center;
+  font: 400 13px/1.3 Erode, Georgia, serif;
+}
+.drawer-content {
+  gap: 17px;
+}
+.drawer-search {
+  display: flex;
+  width: 100%;
+  height: 34px;
+  padding: 6px 8px;
+  align-items: center;
+  border: 2px solid #000;
+  border-radius: 8px;
+}
+.drawer-search span {
+  font: 24px/12px Arial;
+  transform: rotate(-20deg);
+}
+.drawer-items {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-height: 152px;
+  gap: 15px 11px;
+  overflow-y: auto;
+  padding: 3px 4px;
+}
+.drawer-item {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: 72px auto;
+  flex: initial;
+  width: 100%;
+  gap: 5px;
+  font-size: 0;
+}
+.drawer-item img {
+  width: 100%;
+  height: 72px;
+  object-fit: contain;
+}
+.drawer-item span {
+  display: none;
+}
+.drawer-colours {
+  min-height: 30px;
+  gap: 10px;
+  padding-left: 8px;
+}
+.drawer-colours button {
+  flex-basis: 13px;
+  width: 13px;
+  height: 13px;
+}
+.drawer-colours button:hover {
+  outline: 1px solid #000;
+  outline-offset: 2px;
+}
+.drawer-colours button span {
+  display: none;
+}
+@media (min-height: 820px) {
+  .moodboard-drawer {
+    height: 426px;
+  }
+  .moodboard-canvas {
+    min-height: 580px;
+  }
+}
+@media (max-height: 720px) {
+  .moodboard-screen {
+    padding-top: 30px;
+  }
+  .moodboard-workspace {
+    top: 85px;
+  }
+  .moodboard-canvas {
+    min-height: 480px;
+  }
+  .moodboard-drawer {
+    height: min(390px, 62svh);
+    min-height: 320px;
+  }
 }
 label {
   font-family: Tanker, Impact, "Arial Narrow", sans-serif;
@@ -158,7 +442,19 @@ label {
 .intro {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
+}
+.intro-brand-row {
+  margin-bottom: 24px;
+}
+.search-box + .actions {
+  margin-top: 16px;
+}
+.intro-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
 }
 .brand-logo {
   display: block;
@@ -185,6 +481,17 @@ label {
   align-items: center;
   gap: 13px;
 }
+.actions .mode-toggle {
+  height: 34px;
+  min-height: 34px;
+  margin-left: auto;
+  padding: 4px;
+  border-radius: 8px;
+}
+.actions .mode-toggle button {
+  height: 26px;
+  border-radius: 5px;
+}
 .btn {
   border: 0;
   border-radius: 8px;
@@ -202,10 +509,15 @@ label {
 .primary-action {
   display: inline-flex;
   min-height: 0;
-  padding: 8px 12px 10px;
+  padding: 8px 8px 10px;
   align-items: center;
   justify-content: center;
   font-size: 16px;
+}
+.button-plus {
+  margin-right: 5px;
+  font-size: 20px;
+  line-height: .7;
 }
 .btn-orange {
   background: var(--orange);
@@ -220,16 +532,16 @@ label {
 .search-box {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
   height: 32px;
   padding: 6px 8px;
-  border: 1px solid #000;
+  border: 2px solid #000;
   border-radius: 8px;
   background: #fff;
 }
 .search-box span {
-  width: 18px;
+  width: 12px;
   font: 400 24px/12px Arial;
   transform: rotate(-20deg);
 }
@@ -246,6 +558,646 @@ label {
 }
 .search-box input::placeholder {
   color: var(--muted);
+}
+.moodboard-entry {
+  display: flex;
+  width: 100%;
+  min-height: 68px;
+  padding: 11px 13px;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid #000;
+  border-radius: 10px;
+  background: #fff;
+  color: #000;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #000;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease;
+}
+.moodboard-entry:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000;
+}
+.moodboard-entry-mark {
+  display: grid;
+  width: 39px;
+  height: 39px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--orange);
+  font: 24px/1 Arial;
+}
+.moodboard-entry strong {
+  display: block;
+  font:
+    400 20px/1 Tanker,
+    Impact,
+    sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.moodboard-entry small {
+  display: block;
+  margin-top: 3px;
+  font:
+    14px/1 Erode,
+    Georgia,
+    serif;
+}
+.moodboard-entry b {
+  margin-left: auto;
+  font: 27px/1 Arial;
+  font-weight: 400;
+}
+.moodboard-screen {
+  width: min(430px, 100%);
+  min-height: 100svh;
+  margin: auto;
+  padding: 22px 18px 0;
+  overflow: hidden;
+}
+.moodboard-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.moodboard-header .round-btn {
+  width: 34px;
+  height: 34px;
+}
+.moodboard-header > div {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.moodboard-header strong {
+  font:
+    400 21px/1 Tanker,
+    Impact,
+    sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.moodboard-header small {
+  color: #707070;
+  font-size: 12px;
+}
+.moodboard-save {
+  margin-left: auto;
+  padding: 8px 11px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--orange);
+  color: #000;
+  font:
+    400 16px/1 Erode,
+    Georgia,
+    serif;
+  cursor: pointer;
+}
+.moodboard-workspace {
+  position: relative;
+  padding-top: 23px;
+}
+.moodboard-toolbar {
+  display: flex;
+  position: relative;
+  z-index: 2;
+  width: max-content;
+  margin: 0 auto -1px;
+  overflow: visible;
+  border: 1px solid #000;
+  border-bottom: 0;
+  border-radius: 9px 9px 0 0;
+  background: #000;
+}
+.moodboard-toolbar > button,
+.shape-menu > button,
+.board-colour,
+.board-eyedropper {
+  display: grid;
+  width: 45px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-right: 1px solid #444;
+  background: #000;
+  color: #fff;
+  font:
+    400 17px/1 Erode,
+    Georgia,
+    serif;
+  cursor: pointer;
+}
+.moodboard-toolbar button.active {
+  background: #ff8248;
+  color: #000;
+}
+.shape-menu {
+  position: relative;
+}
+.shape-menu > div {
+  display: none;
+  position: absolute;
+  top: 36px;
+  left: -1px;
+  grid-template-columns: repeat(3, 36px);
+  border: 1px solid #000;
+  background: #fff;
+  box-shadow: 2px 2px #000;
+}
+.shape-menu:hover > div,
+.shape-menu:focus-within > div {
+  display: grid;
+}
+.shape-menu > div button {
+  height: 34px;
+  border: 0;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+}
+.board-colour,
+.board-eyedropper {
+  position: relative;
+}
+.board-colour input,
+.board-eyedropper input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.board-colour span {
+  width: 17px;
+  height: 17px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+}
+.board-eyedropper span {
+  font: 24px/1 Arial;
+  transform: rotate(-45deg);
+}
+.moodboard-canvas {
+  position: relative;
+  min-height: 335px;
+  overflow: hidden;
+  border: 2px solid #000;
+  border-radius: 11px;
+  box-shadow: 0 9px 16px #0002;
+}
+.canvas-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 7px;
+  color: #8a8a8a;
+  text-align: center;
+  pointer-events: none;
+}
+.canvas-empty b {
+  color: #000;
+  font:
+    400 25px/1 Tanker,
+    Impact,
+    sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.canvas-empty span {
+  font-size: 14px;
+}
+.board-object {
+  position: absolute;
+  display: grid;
+  max-width: 42%;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--object-colour);
+  cursor: move;
+  transform: translate(-50%, -50%) rotate(var(--object-rotation, 0deg)) scale(var(--object-scale, 1));
+  transform-origin: center;
+}
+.board-selection-box {
+  position: absolute;
+  box-sizing: border-box;
+  outline: 1px dashed #000;
+  outline-offset: 5px;
+  cursor: move;
+  pointer-events: auto;
+  touch-action: none;
+  transform: rotate(var(--selection-rotation, 0deg));
+  transform-origin: center;
+}
+.board-object.image {
+  width: 120px;
+  height: 120px;
+  /* Images are resized with a single square size value. Do not let the
+     generic object width cap constrain just one dimension at larger sizes. */
+  max-width: none;
+  aspect-ratio: 1 / 1;
+}
+.board-object.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.board-resize-handle {
+  position: absolute;
+  z-index: 2;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  background: #000;
+  pointer-events: auto;
+  touch-action: none;
+}
+.board-resize-handle.top-left { top: -10px; left: -10px; cursor: nwse-resize; }
+.board-resize-handle.top-right { top: -10px; right: -10px; cursor: nesw-resize; }
+.board-resize-handle.bottom-left { bottom: -10px; left: -10px; cursor: nesw-resize; }
+.board-resize-handle.bottom-right { right: -10px; bottom: -10px; cursor: nwse-resize; }
+.board-resize-handle.middle-left,
+.board-resize-handle.middle-right {
+  top: 50%;
+  width: 8px;
+  height: 24px;
+  border-radius: 999px;
+  cursor: ew-resize;
+  transform: translateY(-50%);
+}
+.board-resize-handle.middle-left { left: -10px; }
+.board-resize-handle.middle-right { right: -10px; }
+@media (pointer: coarse) {
+  .board-resize-handle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #000 0 4.5px, transparent 5px);
+  }
+  .board-resize-handle.top-left { top: -20px; left: -20px; }
+  .board-resize-handle.top-right { top: -20px; right: -20px; }
+  .board-resize-handle.bottom-left { bottom: -20px; left: -20px; }
+  .board-resize-handle.bottom-right { right: -20px; bottom: -20px; }
+  .board-resize-handle.middle-left,
+  .board-resize-handle.middle-right {
+    width: 28px;
+    height: 36px;
+    background: radial-gradient(ellipse, #000 0 4px, transparent 5px);
+  }
+  .board-resize-handle.middle-left { left: -20px; }
+  .board-resize-handle.middle-right { right: -20px; }
+}
+.board-rotate-handle {
+  position: absolute;
+  z-index: 3;
+  bottom: -46px;
+  left: 50%;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #000;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  cursor: grab;
+  touch-action: none;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+.board-rotate-handle::before {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 1px;
+  height: 15px;
+  background: #000;
+  content: '';
+  transform: translateX(-50%);
+}
+.board-rotate-handle:active { cursor: grabbing; }
+.board-rotate-handle span { font: 18px/1 Arial, sans-serif; }
+.board-rotate-handle output {
+  position: absolute;
+  top: 31px;
+  left: 50%;
+  min-width: max-content;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: #000;
+  color: #fff;
+  font: 11px/1.2 Arial, sans-serif;
+  transform: translateX(-50%);
+}
+.board-object-delete {
+  position: absolute;
+  z-index: 3;
+  top: -30px;
+  left: 50%;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #000;
+  border-radius: 50%;
+  background: #000000;
+  color: #ffffff;
+  font:
+    20px/18px Arial,
+    sans-serif;
+  cursor: pointer;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+.board-object.shape {
+  width: 104px;
+  height: 104px;
+}
+.board-object.shape > span {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  background: var(--object-colour);
+}
+.board-object.shape .shape-circle { border-radius: 50%; }
+.board-object.shape .shape-arch {
+  border-radius: 52px 52px 0 0;
+}
+.shape-colour-code {
+  max-width: 92%;
+  color: var(--shape-code-colour);
+  font: 400 clamp(12px, 4vw, 18px)/1 Tanker, Impact, sans-serif;
+  letter-spacing: 0.035em;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+.board-shape-eye {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: calc(100% + 14px);
+  display: grid;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #000;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateY(-50%);
+}
+.board-shape-eye.is-visible {
+  background: #000;
+  color: #fff;
+}
+.board-shape-eye svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+.board-shape-eye:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+.board-object.text {
+  box-sizing: border-box;
+  width: var(--text-width, 180px);
+  padding: 3px;
+  color: var(--object-colour);
+  text-align: var(--text-align, left);
+  font:
+    25px/1 Erode,
+    Georgia,
+    serif;
+  font-family: var(--text-font, Erode, Georgia, serif);
+}
+.board-text-input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  overflow: hidden;
+  resize: none;
+  text-align: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.board-text-input:focus-visible {
+  outline: 0;
+}
+.board-object.swatch span {
+  width: 45px;
+  height: 45px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--object-colour);
+  box-shadow: 0 1px 5px #0004;
+}
+.object-inspector {
+  display: flex;
+  position: absolute;
+  z-index: 3;
+  right: 6px;
+  bottom: 8px;
+  left: 6px;
+  min-height: 35px;
+  padding: 5px 7px;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  box-shadow: 2px 2px #000;
+}
+.object-inspector > span {
+  overflow: hidden;
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.object-inspector input {
+  min-width: 0;
+  width: 82px;
+  border: 0;
+  border-bottom: 1px solid #000;
+  font: inherit;
+}
+.object-inspector label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font:
+    10px/1 Tanker,
+    sans-serif;
+}
+.object-inspector label input {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+}
+.object-inspector button {
+  border: 0;
+  background: transparent;
+  color: #d00000;
+  font:
+    12px/1 Erode,
+    Georgia,
+    serif;
+  cursor: pointer;
+}
+.moodboard-drawer {
+  position: relative;
+  z-index: 4;
+  min-height: 232px;
+  margin: 20px -18px 0;
+  padding: 9px 18px 22px;
+  border-radius: 20px 20px 0 0;
+  background: #ffffff;
+  box-shadow: 0 -7px 18px #0002;
+}
+.drawer-handle {
+  width: 35px;
+  height: 4px;
+  margin: 0 auto 11px;
+  border-radius: 4px;
+  background: #000;
+}
+.stash-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 9px;
+  scrollbar-width: none;
+}
+.stash-tabs::-webkit-scrollbar {
+  display: none;
+}
+.stash-tabs button {
+  flex: 0 0 auto;
+  padding: 6px 8px;
+  border: 1px solid #aaa;
+  border-radius: 20px;
+  background: #fff;
+  color: #000;
+  font:
+    400 13px/1 Tanker,
+    Impact,
+    sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.stash-tabs button.active {
+  border-color: #000;
+  background: #000;
+  color: #fff;
+}
+.stash-tabs > span {
+  color: #777;
+  font-size: 13px;
+}
+.drawer-content {
+  display: grid;
+  gap: 10px;
+}
+.drawer-items {
+  display: flex;
+  min-height: 95px;
+  gap: 13px;
+  overflow-x: auto;
+  padding: 3px 2px;
+}
+.drawer-item {
+  display: grid;
+  flex: 0 0 68px;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #000;
+  font:
+    12px/1 Erode,
+    Georgia,
+    serif;
+  text-align: left;
+  cursor: pointer;
+}
+.drawer-item img {
+  width: 66px;
+  height: 65px;
+  object-fit: contain;
+}
+.drawer-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.drawer-items p {
+  margin: 19px 0;
+  color: #777;
+  font-size: 14px;
+}
+.drawer-colours {
+  display: flex;
+  min-height: 29px;
+  gap: 9px;
+  overflow-x: auto;
+}
+.drawer-colours button {
+  display: grid;
+  flex: 0 0 24px;
+  height: 24px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--dot);
+  cursor: pointer;
+}
+.drawer-colours button span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  opacity: 0;
+}
+.drawer-colours button:focus-visible,
+.drawer-colours button:hover {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+.drawer-colours button:active span {
+  opacity: 1;
 }
 .folder-grid {
   display: grid;
@@ -295,6 +1247,152 @@ label {
   line-height: 15px;
   letter-spacing: -0.35px;
 }
+.moodboard-thumbnail {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--folder-art-ratio);
+  overflow: hidden;
+  border: 2px solid #000;
+  border-radius: 10px;
+  background: #fff;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.moodboard-thumbnail-object {
+  position: absolute;
+  display: block;
+  /* The editor canvas is roughly twice as wide as a library card. Scale its
+     content to that relationship so the preview reads as the full board,
+     rather than a smaller composition floating inside the thumbnail. */
+  transform: translate(-50%, -50%) rotate(var(--thumbnail-rotation)) scale(calc(var(--thumbnail-scale) * .48));
+  transform-origin: center;
+}
+.moodboard-thumbnail-object.image {
+  overflow: hidden;
+  border-radius: 2px;
+}
+.moodboard-thumbnail-object.image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.moodboard-thumbnail-object.shape {
+  width: 58px;
+  height: 58px;
+}
+.moodboard-thumbnail-object.shape i,
+.moodboard-thumbnail-object.swatch i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--thumbnail-colour);
+}
+.moodboard-thumbnail-object.shape .thumbnail-shape-circle { border-radius: 50%; }
+.moodboard-thumbnail-object.shape .thumbnail-shape-arch { border-radius: 58px 58px 0 0; }
+.moodboard-thumbnail-object.text {
+  width: var(--thumbnail-text-width);
+  color: var(--thumbnail-colour);
+  font: 20px/1.1 var(--thumbnail-font);
+  text-align: var(--thumbnail-align);
+}
+.moodboard-thumbnail-object.text i {
+  display: block;
+  overflow: hidden;
+  font: inherit;
+  font-style: normal;
+  white-space: pre-wrap;
+}
+.moodboard-thumbnail-object.swatch {
+  width: 42px;
+  height: 42px;
+}
+.moodboard-card {
+  position: relative;
+}
+.moodboard-open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.moodboard-open:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 6px;
+  border-radius: 16px;
+}
+.moodboard-kebab {
+  position: absolute;
+  z-index: 1;
+  top: 4px;
+  right: 0px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+}
+.moodboard-kebab svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+.moodboard-kebab:hover,
+.moodboard-kebab:focus-visible {
+  background: transparent;
+  color: #333;
+}
+.moodboard-kebab:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+.moodboard-menu-panel {
+  position: absolute;
+  z-index: 2;
+  top: 36px;
+  right: 0;
+  min-width: 112px;
+  padding: 6px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 18px rgb(0 0 0 / 0.18);
+}
+.moodboard-menu-panel button {
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #c51d27;
+  font: 400 15px/1 Erode, Georgia, serif;
+  text-align: left;
+  cursor: pointer;
+}
+.moodboard-menu-panel button:hover,
+.moodboard-menu-panel button:focus-visible {
+  background: #f5f5f5;
+}
+.moodboard-menu-panel button:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 1px;
+}
+.moodboard-card:hover .moodboard-thumbnail,
+.moodboard-open:focus-visible .moodboard-thumbnail {
+  transform: translateY(-2px) scale(1.015);
+  background: #f7f7f7;
+}
 /* The frosted folder is the back plane; collected objects sit crisply above it. */
 .folder-art {
   position: relative;
@@ -304,7 +1402,9 @@ label {
   overflow: visible;
   isolation: isolate;
   background: transparent;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .folder-art::before {
   position: absolute;
@@ -327,7 +1427,7 @@ label {
   inset: auto 0 0;
   height: 96px;
   content: "";
-  border: 1px solid rgb(255 255 255 / 0.58); 
+  border: 1px solid rgb(255 255 255 / 0.58);
   border-radius: 8px;
   filter: saturate(1.45) brightness(1.06);
   background:
@@ -342,7 +1442,11 @@ label {
   backdrop-filter: url("#folder-grid-warp") blur(20px) saturate(1.18);
   -webkit-backdrop-filter: blur(10px) saturate(1.18);
   -webkit-backdrop-filter: url("#folder-grid-warp") blur(10px) saturate(1.18);
-  -webkit-mask: radial-gradient(circle 17px at 50% -4px, transparent 16px, #000 17px);
+  -webkit-mask: radial-gradient(
+    circle 17px at 50% -4px,
+    transparent 16px,
+    #000 17px
+  );
   mask: radial-gradient(circle 17px at 50% -4px, transparent 16px, #000 17px);
   opacity: 0.45;
   pointer-events: none;
@@ -379,7 +1483,7 @@ label {
   height: 95px;
   object-fit: contain;
   transform-origin: bottom center;
-  filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.40));
+  filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.4));
 }
 .art-item-0 {
   z-index: 1;
@@ -437,7 +1541,9 @@ label {
   border: 0;
   background: transparent;
   color: #000;
-  font: 700 27px/1 Arial, sans-serif;
+  font:
+    700 27px/1 Arial,
+    sans-serif;
   cursor: pointer;
 }
 .kebab-btn:hover,
@@ -467,7 +1573,10 @@ label {
   border-radius: 7px;
   background: transparent;
   color: #000;
-  font: 400 17px/1 Erode, Georgia, serif;
+  font:
+    400 17px/1 Erode,
+    Georgia,
+    serif;
   text-align: left;
   cursor: pointer;
 }
@@ -571,7 +1680,11 @@ label {
     0 10px 18px rgb(var(--folder-dark-rgb) / 0.2);
   backdrop-filter: blur(10px) saturate(1.18);
   -webkit-backdrop-filter: blur(10px) saturate(1.18);
-  -webkit-mask: radial-gradient(circle 28px at 50% -7px, transparent 27px, #000 28px);
+  -webkit-mask: radial-gradient(
+    circle 28px at 50% -7px,
+    transparent 27px,
+    #000 28px
+  );
   mask: radial-gradient(circle 28px at 50% -7px, transparent 27px, #000 28px);
   opacity: 0.5;
   pointer-events: none;
@@ -735,7 +1848,10 @@ label {
   justify-content: center;
   gap: 12px;
   color: var(--muted);
-  font: 400 14px/1 Tanker, Impact, sans-serif;
+  font:
+    400 14px/1 Tanker,
+    Impact,
+    sans-serif;
   letter-spacing: 0.04rem;
   text-transform: uppercase;
 }
@@ -765,7 +1881,10 @@ label {
   border-radius: 6px;
   background: var(--chip);
   color: var(--chip-text);
-  font: 400 14px/1 Tanker, Impact, sans-serif;
+  font:
+    400 14px/1 Tanker,
+    Impact,
+    sans-serif;
   letter-spacing: 0.04rem;
   text-align: center;
   white-space: nowrap;
@@ -786,7 +1905,10 @@ label {
   box-shadow: 0 3px 7px rgb(0 0 0 / 0.16);
   color: #aeaeae;
   letter-spacing: 0.05rem;
-  font: 400 14px/1 Tanker, Impact, sans-serif;
+  font:
+    400 14px/1 Tanker,
+    Impact,
+    sans-serif;
   cursor: pointer;
 }
 .overlay {
@@ -1044,7 +2166,10 @@ label {
   align-items: center;
   gap: 5px;
   color: #9c9c9c;
-  font: 400 14px/1 Tanker, Impact, sans-serif;
+  font:
+    400 14px/1 Tanker,
+    Impact,
+    sans-serif;
   letter-spacing: 0.03rem;
 }
 .item-stepper span {
@@ -1075,7 +2200,9 @@ label {
   animation: step-pulse 1.1s ease-in-out infinite;
 }
 @keyframes step-pulse {
-  50% { box-shadow: 0 0 0 4px rgb(255 130 72 / 0.30); }
+  50% {
+    box-shadow: 0 0 0 4px rgb(255 130 72 / 0.3);
+  }
 }
 .item-step {
   display: grid;
@@ -1086,7 +2213,10 @@ label {
   margin: 0;
 }
 .item-step h3 {
-  font: 400 21px/1 Tanker, Impact, sans-serif;
+  font:
+    400 21px/1 Tanker,
+    Impact,
+    sans-serif;
   letter-spacing: 0.1rem;
 }
 .step-help {
@@ -1194,7 +2324,10 @@ label {
   border-radius: 99px;
   background: rgb(0 0 0 / 0.72);
   color: #fff;
-  font: 400 11px/1 Erode, Georgia, serif;
+  font:
+    400 11px/1 Erode,
+    Georgia,
+    serif;
   pointer-events: none;
   transform: translateX(-50%);
 }
@@ -1210,7 +2343,10 @@ label {
 }
 .image-adjust-control output {
   color: #707070;
-  font: 400 12px/1 Erode, Georgia, serif;
+  font:
+    400 12px/1 Erode,
+    Georgia,
+    serif;
 }
 .image-adjust-control input {
   width: 100%;
@@ -1230,7 +2366,11 @@ label {
   left: 0;
   height: 6px;
   border-radius: 99px;
-  background: linear-gradient(to right, var(--orange) 0 var(--range-fill), #333 var(--range-fill) 100%);
+  background: linear-gradient(
+    to right,
+    var(--orange) 0 var(--range-fill),
+    #333 var(--range-fill) 100%
+  );
   content: "";
   transform: translateY(-50%);
 }
@@ -1290,7 +2430,10 @@ label {
   border-bottom: 1px solid currentColor;
   background: transparent;
   color: #666;
-  font: 400 12px/1 Erode, Georgia, serif;
+  font:
+    400 12px/1 Erode,
+    Georgia,
+    serif;
   cursor: pointer;
 }
 .reset-crop:hover {
@@ -1318,7 +2461,10 @@ label {
   background: rgb(255 255 255 / 0.76);
 }
 .canvas-loading strong {
-  font: 400 18px/1 Tanker, Impact, sans-serif;
+  font:
+    400 18px/1 Tanker,
+    Impact,
+    sans-serif;
   letter-spacing: 0.01rem;
   text-transform: uppercase;
 }
@@ -1342,21 +2488,27 @@ label {
   border-radius: 50%;
   background: #000;
   color: #fff;
-  font: 700 18px/1 Arial, sans-serif;
+  font:
+    700 18px/1 Arial,
+    sans-serif;
 }
 @keyframes spin {
-  to { transform: rotate(1turn); }
+  to {
+    transform: rotate(1turn);
+  }
 }
 .step-heading {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 15px;
 }
 .step-kicker {
   flex: 0 0 auto;
   color: #9c9c9c;
-  font: 400 11px/1 Tanker, Impact, sans-serif;
+  font:
+    400 11px/1 Tanker,
+    Impact,
+    sans-serif;
   letter-spacing: 0.1rem;
 }
 .remove-bg-button {
@@ -1367,7 +2519,10 @@ label {
   border-radius: 8px;
   background: #000;
   color: #fff;
-  font: 400 16px/1 Erode, Georgia, serif;
+  font:
+    400 16px/1 Erode,
+    Georgia,
+    serif;
   cursor: pointer;
 }
 .remove-bg-button:disabled,
@@ -1411,7 +2566,10 @@ label {
 }
 .toggle-row small {
   color: #747474;
-  font: 400 12px/1.2 Erode, Georgia, serif;
+  font:
+    400 12px/1.2 Erode,
+    Georgia,
+    serif;
   letter-spacing: normal;
   text-transform: none;
 }
@@ -1471,7 +2629,10 @@ label {
 }
 .brush-size output {
   color: #777;
-  font: 400 12px/1 Erode, Georgia, serif;
+  font:
+    400 12px/1 Erode,
+    Georgia,
+    serif;
 }
 .brush-size input {
   width: 100%;
@@ -1489,7 +2650,10 @@ label {
   border-radius: 7px;
   background: #fff;
   color: #000;
-  font: 400 13px/1 Erode, Georgia, serif;
+  font:
+    400 13px/1 Erode,
+    Georgia,
+    serif;
   cursor: pointer;
 }
 .step-actions {
@@ -1524,7 +2688,10 @@ label {
 }
 .colour-sampler p {
   margin-bottom: 7px;
-  font: 400 15px/1 Tanker, Impact, sans-serif;
+  font:
+    400 15px/1 Tanker,
+    Impact,
+    sans-serif;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
 }
@@ -1564,7 +2731,9 @@ label {
   background-repeat: no-repeat;
   background-size: 900%;
   color: #000;
-  box-shadow: 0 2px 0 #000, 0 0 0 3px rgb(255 255 255 / 0.82);
+  box-shadow:
+    0 2px 0 #000,
+    0 0 0 3px rgb(255 255 255 / 0.82);
   cursor: grab;
   touch-action: none;
   transform: translate(-50%, -50%);
@@ -1602,7 +2771,10 @@ label {
   border-radius: 7px;
   background: #fff;
   color: #000;
-  font: 400 14px/1 Erode, Georgia, serif;
+  font:
+    400 14px/1 Erode,
+    Georgia,
+    serif;
   cursor: pointer;
 }
 .colour-picker .eyedropper-btn {
@@ -1620,7 +2792,9 @@ label {
   height: 32px;
   fill: currentColor;
 }
-.colour-picker .eyedropper-btn:hover { background: #f2f2f2; }
+.colour-picker .eyedropper-btn:hover {
+  background: #f2f2f2;
+}
 .colour-picker .eyedropper-btn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
@@ -1650,7 +2824,10 @@ label {
   appearance: auto;
   background: #fff;
   color: #000;
-  font: 400 16px Erode, Georgia, serif;
+  font:
+    400 16px Erode,
+    Georgia,
+    serif;
 }
 .folder-select select:focus,
 .folder-select select:focus-visible {
@@ -1679,7 +2856,10 @@ label {
   border-radius: 6px;
   background: var(--chip);
   color: var(--chip-text);
-  font: 400 14px/1 Tanker, Impact, sans-serif;
+  font:
+    400 14px/1 Tanker,
+    Impact,
+    sans-serif;
   letter-spacing: 0.03rem;
   text-align: center;
   white-space: nowrap;
@@ -1691,8 +2871,12 @@ label {
   line-height: 1;
   text-align: center;
 }
-.item-colour-chip.selected { border-color: #000; }
-.item-colour-chip.dark { color: #fff; }
+.item-colour-chip.selected {
+  border-color: #000;
+}
+.item-colour-chip.dark {
+  color: #fff;
+}
 .item-colour-chip.bright {
   color: #000;
   -webkit-text-stroke: 1px #eaeaea;
@@ -1715,7 +2899,9 @@ label {
   border-radius: 50%;
   background: #000;
   color: #fff;
-  font: 700 13px/1 Arial, sans-serif;
+  font:
+    700 13px/1 Arial,
+    sans-serif;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
@@ -1745,24 +2931,35 @@ label {
   border-radius: 8px;
   background: #fff7f2;
   text-align: center;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
 }
 .upload-zone.dragging {
   background: #ffe2d4;
   transform: scale(1.01);
 }
 .upload-zone strong {
-  font: 550 17px/1.1 Erode, Georgia, serif;
+  font:
+    550 17px/1.1 Erode,
+    Georgia,
+    serif;
   letter-spacing: -0.03rem;
   /* text-transform: uppercase; */
 }
 .upload-zone small {
   color: #858585;
-  font: 400 12px/1 Erode, Georgia, serif;
+  font:
+    400 12px/1 Erode,
+    Georgia,
+    serif;
 }
 .upload-tip {
   color: #000;
-  font: 400 14px/1 Erode, Georgia, serif;
+  font:
+    400 14px/1 Erode,
+    Georgia,
+    serif;
 }
 .upload-zone .file-input {
   position: absolute;
@@ -1783,7 +2980,10 @@ label {
   border-radius: 6px;
   background: #000;
   color: #fff;
-  font: 400 12px/1 Erode, Georgia, serif !important;
+  font:
+    400 12px/1 Erode,
+    Georgia,
+    serif !important;
   letter-spacing: normal !important;
   text-transform: none !important;
   cursor: pointer;
@@ -1871,5 +3071,756 @@ label {
   }
   .item-stepper .loading span {
     animation: none;
+  }
+}
+
+/* Four-up drawer inventory — the object square stays stable while its palette is centred below. */
+.moodboard-drawer .drawer-items {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: start;
+  gap: 18px 12px;
+  min-height: 188px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 3px 1px 8px;
+}
+.moodboard-drawer .drawer-item-wrap {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: 88px minmax(14px, auto);
+  justify-items: center;
+  gap: 7px;
+}
+.moodboard-drawer .drawer-item {
+  display: grid;
+  width: 100%;
+  height: 88px;
+  min-width: 0;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.moodboard-drawer .drawer-item img {
+  display: block;
+  width: 100%;
+  height: 88px;
+  object-fit: contain;
+}
+.moodboard-drawer .drawer-item span {
+  display: none;
+}
+.moodboard-drawer .drawer-item-swatches {
+  display: flex;
+  min-height: 14px;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+.moodboard-drawer .drawer-item-swatches button {
+  display: block;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--dot);
+  cursor: pointer;
+}
+.moodboard-drawer .drawer-item-swatches button:hover,
+.moodboard-drawer .drawer-item-swatches button:focus-visible {
+  outline: 1px solid #000;
+  outline-offset: 2px;
+}
+
+/* Shared view switch: the current mode is readable at a glance and the whole
+   control remains a single, keyboard-accessible switch. */
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 38px;
+  padding: 4px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #000;
+}
+.mode-toggle button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  flex: 0 0 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+  transition: background .16s ease, color .16s ease, font-weight .16s ease;
+}
+.mode-toggle button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mode-toggle button svg circle {
+  fill: currentColor;
+  stroke: none;
+}
+.mode-toggle button.active {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 700;
+}
+.mode-toggle button:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: -1px;
+}
+
+/* Moodboard feature — Figma node 136:1080. Kept isolated so the rest of Stash uses its existing layout tokens. */
+.moodboard-screen {
+  position: relative;
+  width: min(402px, 100%);
+  height: 100svh;
+  min-height: 640px;
+  margin: auto;
+  /* Match the app's standard page header inset: this keeps the back and Save
+     controls on the same baseline as the collection actions in the reference. */
+  padding: 80px 26px 0;
+  overflow: hidden;
+  background: #fff;
+  background-image:
+    linear-gradient(#0000000d 1px, transparent 1px),
+    linear-gradient(90deg, #0000000d 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+.moodboard-header {
+  position: relative;
+  display: flex;
+  height: 34px;
+  align-items: center;
+  justify-content: space-between;
+}
+.moodboard-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: calc(100% - 54px);
+  transform: translate(-50%, -50%);
+}
+.moodboard-title h1,
+.moodboard-title input {
+  margin: 0;
+  font: 400 34px/0.95 Tanker, Impact, sans-serif;
+  letter-spacing: 0.04rem;
+}
+.moodboard-title h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.moodboard-title input {
+  width: min(250px, 57vw);
+  min-width: 0;
+  padding: 2px 4px 4px;
+  border: 1px solid #000;
+  border-radius: 3px;
+  background: #fff;
+  color: #000;
+  outline: none;
+}
+.moodboard-title input:focus-visible {
+  box-shadow: 0 0 0 2px var(--orange);
+}
+.moodboard-title-edit {
+  display: grid;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 auto;
+  place-items: center;
+  padding: 3px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+}
+.moodboard-title-edit:hover,
+.moodboard-title-edit:focus-visible {
+  background: #0000000d;
+  outline: none;
+}
+.moodboard-title-edit:focus-visible {
+  box-shadow: 0 0 0 2px var(--orange);
+}
+.moodboard-title-edit svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+.moodboard-back {
+  flex: 0 0 auto;
+}
+.moodboard-header > div {
+  display: none;
+}
+.moodboard-header > .moodboard-title {
+  display: flex;
+}
+.moodboard-save {
+  margin: 0;
+  padding: 8px 12px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--orange);
+  color: #000;
+  font:
+    400 16px/1 Erode,
+    Georgia,
+    serif;
+  letter-spacing: -0.9px;
+  cursor: pointer;
+}
+.moodboard-workspace {
+  position: absolute;
+  top: 156px;
+  right: 26px;
+  left: 26px;
+  padding: 0;
+}
+.moodboard-toolbar {
+  display: flex;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 42px;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0 12px;
+  overflow: visible;
+  border: 0;
+  border-radius: 12px;
+  background: #000;
+}
+.moodboard-tool-group {
+  display: flex;
+  min-width: 0;
+  margin-left: auto;
+  align-items: center;
+  gap: 15px;
+}
+.moodboard-toolbar > button,
+.moodboard-tool-group > button,
+.shape-menu > button,
+.board-eyedropper {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.moodboard-toolbar > button img,
+.moodboard-tool-group > button img,
+.shape-menu > button img,
+.board-eyedropper img {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.board-font,
+.board-background,
+.board-photo {
+  display: grid;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.board-font > span,
+.board-background > span,
+.board-photo > span {
+  font: 700 15px/1 Arial, sans-serif;
+}
+.board-background img,
+.board-photo img {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.board-font select,
+.board-background input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.photo-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.shape-menu {
+  position: relative;
+}
+.shape-menu > div {
+  display: grid;
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  grid-template-columns: repeat(3, 34px);
+  padding: 4px;
+  border: 1px solid #000;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: 2px 3px 0 #000;
+  transform: translateX(-50%);
+}
+.shape-menu > div button {
+  width: 34px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  color: #000;
+  font:
+    22px/1 Arial,
+    sans-serif;
+  cursor: pointer;
+}
+.board-eyedropper {
+  position: relative;
+}
+.clear-canvas {
+  width: auto !important;
+  min-width: 37px;
+  margin-left: 24px;
+  padding: 0 2px !important;
+  color: #fff !important;
+  font: 400 13px/1 Erode, Georgia, serif !important;
+}
+.clear-canvas:hover,
+.clear-canvas:focus-visible {
+  color: var(--orange) !important;
+}
+@media (max-width: 360px) {
+  .moodboard-toolbar {
+    padding: 0 7px;
+  }
+  .moodboard-tool-group {
+    gap: 9px;
+  }
+  .clear-canvas {
+    margin-left: 14px;
+  }
+}
+.moodboard-canvas {
+  position: relative;
+  height: 480px;
+  min-height: 0;
+  margin-top: 19px;
+  overflow: hidden;
+  border: 2px solid #000;
+  border-radius: 12px;
+  box-shadow: 0 8px 12px 4px rgb(0 0 0 / 0.15);
+  /* Objects are authored against the 350px-wide canvas at the reference
+     mobile width. Reduce their visual size with the board on smaller phones
+     while preserving their stored pixel dimensions and percentage placement. */
+  --canvas-element-scale: 1;
+}
+.canvas-empty {
+  padding-bottom: 175px;
+}
+.canvas-empty b {
+  font:
+    400 23px/1 Tanker,
+    Impact,
+    sans-serif;
+}
+.board-object {
+  touch-action: none;
+}
+.board-object.image {
+  width: 88px;
+  height: 88px;
+}
+
+@media (max-width: 402px) {
+  .moodboard-canvas {
+    --canvas-element-scale: clamp(0.55, calc((100vw - 52px) * 0.0028571429), 1);
+  }
+
+  .board-object {
+    transform: translate(-50%, -50%) rotate(var(--object-rotation, 0deg)) scale(calc(var(--object-scale, 1) * var(--canvas-element-scale)));
+  }
+}
+.moodboard-screen .moodboard-drawer {
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  height: clamp(320px, 44svh, 426px);
+  min-height: 0;
+  margin: 0;
+  padding: 0 24px 24px;
+  flex-direction: column;
+  border-radius: 16px 16px 0 0;
+  background: #e9e9e9;
+  box-shadow: 0 -4px 10px rgb(0 0 0 / 0.15);
+  transform: translateY(var(--drawer-offset, calc(100% - 32px)));
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Give the sheet a torn-paper-style top edge while keeping its draggable
+   layout and transformed snap positions unchanged. */
+.moodboard-screen .moodboard-drawer {
+  --drawer-zigzag-depth: 10px;
+  --drawer-top-shadow: drop-shadow(0 -6px 12px rgb(0 0 0 / 0.20));
+  border-radius: 0;
+  /* `drop-shadow` follows the clipped zigzag silhouette; a box-shadow would
+     be clipped together with the drawer. */
+  filter: var(--drawer-top-shadow);
+  clip-path: polygon(
+    0 100%,
+    0 var(--drawer-zigzag-depth),
+    2.5% 0,
+    5% var(--drawer-zigzag-depth),
+    7.5% 0,
+    10% var(--drawer-zigzag-depth),
+    12.5% 0,
+    15% var(--drawer-zigzag-depth),
+    17.5% 0,
+    20% var(--drawer-zigzag-depth),
+    22.5% 0,
+    25% var(--drawer-zigzag-depth),
+    27.5% 0,
+    30% var(--drawer-zigzag-depth),
+    32.5% 0,
+    35% var(--drawer-zigzag-depth),
+    37.5% 0,
+    40% var(--drawer-zigzag-depth),
+    42.5% 0,
+    45% var(--drawer-zigzag-depth),
+    47.5% 0,
+    50% var(--drawer-zigzag-depth),
+    52.5% 0,
+    55% var(--drawer-zigzag-depth),
+    57.5% 0,
+    60% var(--drawer-zigzag-depth),
+    62.5% 0,
+    65% var(--drawer-zigzag-depth),
+    67.5% 0,
+    70% var(--drawer-zigzag-depth),
+    72.5% 0,
+    75% var(--drawer-zigzag-depth),
+    77.5% 0,
+    80% var(--drawer-zigzag-depth),
+    82.5% 0,
+    85% var(--drawer-zigzag-depth),
+    87.5% 0,
+    90% var(--drawer-zigzag-depth),
+    92.5% 0,
+    95% var(--drawer-zigzag-depth),
+    97.5% 0,
+    100% var(--drawer-zigzag-depth),
+    100% 100%
+  );
+}
+.moodboard-drawer.is-dragging {
+  transition: none;
+}
+.drawer-sheet-header {
+  position: relative;
+  width: calc(100% + 48px);
+  margin: 0 -24px;
+  /* Leave breathing room between the grab notch and the stash tabs. */
+  padding: 60px 24px 0;
+  flex: 0 0 auto;
+  /* Keep vertical drags available to the drawer, while allowing the stash
+     strip below to receive native horizontal swipe scrolling. */
+  touch-action: pan-x;
+  user-select: none;
+  cursor: grab;
+}
+.drawer-sheet-header:active {
+  cursor: grabbing;
+}
+.drawer-grab {
+  display: grid;
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  width: 54px;
+  height: 28px;
+  padding: 0;
+  place-items: start center;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  transform: translateX(-50%);
+}
+.drawer-grab:active {
+  cursor: grabbing;
+}
+.drawer-grab span {
+  width: 31px;
+  height: 4px;
+  border-radius: 12px;
+  background: #000;
+  pointer-events: none;
+}
+.stash-tabs {
+  display: flex;
+  width: 100%;
+  min-height: 26px;
+  gap: 7px;
+  align-items: center;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 0 0 14px;
+  border-bottom: 1px solid #aeaeae;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+.stash-tabs::-webkit-scrollbar {
+  display: none;
+}
+.stash-tabs button {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #000;
+  font:
+    400 15px/1 Tanker,
+    Impact,
+    sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.stash-tabs button.active {
+  padding: 4px;
+  background: #000;
+  color: #fff;
+}
+.drawer-content {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 14px;
+}
+.drawer-search {
+  display: flex;
+  width: 100%;
+  height: 36px;
+  padding: 7px 9px;
+  align-items: center;
+  gap: 6px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #fff;
+}
+.drawer-search span {
+  width: 16px;
+  font:
+    24px/12px Arial,
+    sans-serif;
+  transform: rotate(-20deg);
+}
+.drawer-search input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #000;
+  font:
+    400 15px/1 Erode,
+    Georgia,
+    serif;
+}
+.drawer-search input::placeholder {
+  color: #a0a0a0;
+}
+.moodboard-drawer .drawer-items {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px 11px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 3px 4px 16px;
+  touch-action: pan-y;
+}
+.moodboard-drawer .drawer-item-wrap {
+  grid-template-rows: 78px minmax(14px, auto);
+  gap: 7px;
+}
+.moodboard-drawer .drawer-item {
+  display: grid;
+  width: 100%;
+  height: 78px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  background: transparent;
+}
+.moodboard-drawer .drawer-item img {
+  width: 100%;
+  height: 78px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.3));
+}
+.moodboard-drawer .drawer-item span {
+  display: none;
+}
+.moodboard-drawer .drawer-items p {
+  grid-column: 1 / -1;
+  margin: 20px 0;
+  color: #777;
+  font-size: 14px;
+}
+@media (max-height: 720px) {
+  .moodboard-screen {
+    padding-top: 30px;
+  }
+  .moodboard-workspace {
+    top: 85px;
+  }
+  .moodboard-canvas {
+    height: 420px;
+  }
+  .moodboard-drawer {
+    height: min(320px, 50svh);
+  }
+}
+.moodboard-drawer .drawer-colours {
+  display: none;
+}
+@media (max-width: 360px) {
+  .moodboard-drawer .drawer-items {
+    gap: 15px 9px;
+  }
+  .moodboard-drawer .drawer-item-wrap,
+  .moodboard-drawer .drawer-item,
+  .moodboard-drawer .drawer-item img {
+    height: 76px;
+  }
+  .moodboard-drawer .drawer-item-wrap {
+    grid-template-rows: 76px minmax(14px, auto);
+  }
+}
+
+/* A stored item's palette is one control: its segments preview the available
+   colours and the rounded ends make the group read as a single button. */
+.moodboard-drawer .drawer-item-wrap {
+  grid-template-rows: 78px 20px;
+}
+.moodboard-drawer .drawer-item-swatches {
+  display: block;
+  width: min(80%, 94px);
+  height: 12px;
+  min-height: 12px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+.moodboard-drawer .drawer-item-swatches > span {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.moodboard-drawer .drawer-item-swatches i {
+  display: block;
+  min-width: 0;
+  flex: 1;
+  background: var(--swatch-colour);
+}
+.moodboard-drawer .drawer-item-swatches:hover,
+.moodboard-drawer .drawer-item-swatches:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+
+.drawer-colour-picker {
+  position: fixed;
+  z-index: 6;
+  width: 116px;
+  padding: 10px;
+  border: 2px solid #000;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.18);
+  transform: translate(-50%, -50%);
+}
+.drawer-colour-picker > div {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.drawer-colour-picker > div button {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--picker-colour);
+  cursor: pointer;
+}
+.drawer-colour-picker > div button.selected,
+.drawer-colour-picker > div button:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+
+@media (max-width: 390px) {
+  .moodboard-title h1,
+  .moodboard-title input {
+    font-size: 29px;
   }
 }

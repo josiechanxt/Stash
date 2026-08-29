@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { removeBackground as imglyRemoveBackground } from '@imgly/background-removal';
 import landingLogo from '../assets/Stash2.svg';
 import landingFrame1 from '../assets/Asset 01.svg';
@@ -10,6 +10,11 @@ import landingFrame6 from '../assets/Asset 06.svg';
 import landingFrame7 from '../assets/Asset 07.svg';
 import landingFrame8 from '../assets/Asset 08.svg';
 import landingFrame9 from '../assets/Asset 09.svg';
+import figmaTextIcon from '../assets/figma/text-size.svg';
+import figmaShapesIcon from '../assets/figma/shapes.svg';
+import figmaEyedropperIcon from '../assets/figma/eyedropper.svg';
+import backgroundFillIcon from '../assets/Backgroundfill.svg';
+import imageIcon from '../assets/Image.svg';
 
 const folderColors = ['#D00000', '#11922B', '#004DAA', '#c5ab68', '#E45F00', '#111111'];
 const folderPickerColors = ['#F39294', '#91D99A', '#82B2DD', '#EFD99B', '#FFAD7C', '#8d8d8d'];
@@ -69,6 +74,34 @@ function BackArrow() {
   return <svg className="back-arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" /></svg>;
 }
 
+function KebabIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.7" /><circle cx="12" cy="12" r="1.7" /><circle cx="12" cy="19" r="1.7" /></svg>;
+}
+
+function PencilIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.7 3.3 6 6-11.9 11.9-5.1 1.1 1.1-5.1L16.7 5.3l-2-2Z" /><path d="m13.2 6.8 4 4" /></svg>;
+}
+
+function FolderIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.75A1.75 1.75 0 0 1 5.25 5h4.3l1.7 2h7.5a1.75 1.75 0 0 1 1.75 1.75v8.5A1.75 1.75 0 0 1 18.75 19h-13A1.75 1.75 0 0 1 4 17.25V8.75A1.75 1.75 0 0 1 5.75 7h5.5" /></svg>;
+}
+
+function PaletteIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.75 3 2.5 6.8 2.5 11.5S6.75 20 12 20h1.35c1.18 0 1.8-1.32 1.04-2.22-.4-.48-.68-1.08-.68-1.78 0-1.45 1.18-2.63 2.64-2.63H18c2.02 0 3.5-1.54 3.5-3.44C21.5 6.1 17.25 3 12 3Z" /><circle cx="7.5" cy="11" r="1" /><circle cx="10.5" cy="7.5" r="1" /><circle cx="15" cy="8" r="1" /></svg>;
+}
+
+function ModeToggle({ mode, onChange, className = '' }) {
+  const isMoodboard = mode === 'moodboard';
+  return <div className={`mode-toggle ${className}`}>
+    <button type="button" className={!isMoodboard ? 'active' : ''} aria-label="Stash" title="Stash" aria-pressed={!isMoodboard} onClick={() => onChange('stash')}><FolderIcon /></button>
+    <button type="button" className={isMoodboard ? 'active' : ''} aria-label="Moodboard" title="Moodboard" aria-pressed={isMoodboard} onClick={() => onChange('moodboard')}><PaletteIcon /></button>
+  </div>;
+}
+
+function EyeIcon({ open }) {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.4 5.5-9.5 5.5S2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="2.6" />{!open && <path d="m4 4 16 16" />}</svg>;
+}
+
 function Landing({ onEnter }) {
   return <main className="landing-screen">
     <div className="landing-brand"><img src={landingLogo} alt="Stash" /></div>
@@ -78,7 +111,7 @@ function Landing({ onEnter }) {
   </main>;
 }
 
-function Home({ folders, search, setSearch, openFolder, openItem, openFolderModal, openItemModal }) {
+function Home({ folders, search, setSearch, openFolder, openItem, openFolderModal, openItemModal, onModeChange }) {
   const matches = useMemo(() => {
     const query = search.trim().toLowerCase();
     if (!query) return null;
@@ -89,8 +122,526 @@ function Home({ folders, search, setSearch, openFolder, openItem, openFolderModa
     });
   }, [folders, search]);
   return <section className={`screen ${matches ? 'search-screen' : 'home-screen'}`}>
-    <div className="intro"><img className="brand-logo" src={`${import.meta.env.BASE_URL}stash.svg`} alt="Stash" /><div className="actions"><button className="btn btn-dark primary-action" onClick={openFolderModal}>Create Stash</button>{folders.length > 0 && <button className="btn btn-orange primary-action" onClick={openItemModal}>Add Item</button>}</div><SearchBox value={search} onChange={setSearch} /></div>
+    <div className="intro"><div className="intro-brand-row"><img className="brand-logo" src={`${import.meta.env.BASE_URL}stash.svg`} alt="Stash" /></div><SearchBox value={search} onChange={setSearch} /><div className="actions"><button className="btn btn-dark primary-action" onClick={openFolderModal}><span className="button-plus" aria-hidden="true">+</span>Create Stash</button>{folders.length > 0 && <button className="btn btn-orange primary-action" onClick={openItemModal}><span className="button-plus" aria-hidden="true">+</span>Add Item</button>}<ModeToggle mode="stash" onChange={onModeChange} /></div></div>
     {matches ? <><p className="result-count">{matches.length} {matches.length === 1 ? 'Result' : 'Results'}</p><div className="search-grid">{matches.length ? matches.map((item) => <button key={`${item.folder.id}-${item.id}`} className="search-result" onClick={() => openItem(item.folder.id, item.id)}><img src={item.src} alt={item.name} /><span>{item.name}</span></button>) : <p className="empty">No items match that search.</p>}</div></> : <div className="folder-grid">{folders.length ? folders.map((folder) => <button key={folder.id} className="folder-card" onClick={() => openFolder(folder.id)}><FolderArt folder={folder} /><strong>{folder.name}</strong><small>{folder.items.length} {folder.items.length === 1 ? 'item' : 'items'}</small></button>) : <p className="empty">Empty for now. Create your first stash!</p>}</div>}
+  </section>;
+}
+
+function MoodboardLibrary({ moodboards, search, setSearch, createMoodboard, openMoodboard, deleteMoodboard, onModeChange }) {
+  const [menuMoodboardId, setMenuMoodboardId] = useState('');
+  const menuRef = useRef(null);
+  useEffect(() => {
+    if (!menuMoodboardId) return undefined;
+    const closeMenuOnClickAway = (event) => {
+      if (!menuRef.current?.contains(event.target)) setMenuMoodboardId('');
+    };
+    document.addEventListener('pointerdown', closeMenuOnClickAway);
+    return () => document.removeEventListener('pointerdown', closeMenuOnClickAway);
+  }, [menuMoodboardId]);
+  const matches = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return moodboards;
+    return moodboards.filter((moodboard) => moodboard.name.toLowerCase().includes(query));
+  }, [moodboards, search]);
+  return <section className="screen home-screen moodboard-library-screen">
+    <div className="intro"><div className="intro-brand-row"><img className="brand-logo" src={`${import.meta.env.BASE_URL}stash.svg`} alt="Stash" /></div><SearchBox value={search} onChange={setSearch} /><div className="actions"><button className="btn btn-dark primary-action" onClick={createMoodboard}><span className="button-plus" aria-hidden="true">+</span>Create Moodboard</button><ModeToggle mode="moodboard" onChange={onModeChange} /></div></div>
+    {search.trim() && <p className="result-count">{matches.length} {matches.length === 1 ? 'Result' : 'Results'}</p>}
+    <div className="folder-grid moodboard-grid">{matches.length ? matches.map((moodboard) => {
+      const isMenuOpen = menuMoodboardId === moodboard.id;
+      return <div key={moodboard.id} className="folder-card moodboard-card" ref={isMenuOpen ? menuRef : null}><button type="button" className="moodboard-open" onClick={() => openMoodboard(moodboard.id)} aria-label={`Open ${moodboard.name}`}><MoodboardThumbnail moodboard={moodboard} /><strong>{moodboard.name}</strong><small>Moodboard</small></button><button type="button" className="moodboard-kebab" aria-label={`More options for ${moodboard.name}`} title="More options" aria-expanded={isMenuOpen} aria-haspopup="menu" onClick={() => setMenuMoodboardId((current) => current === moodboard.id ? '' : moodboard.id)}><KebabIcon /></button>{isMenuOpen && <div className="moodboard-menu-panel" role="menu" aria-label={`${moodboard.name} options`}><button type="button" role="menuitem" className="moodboard-menu-delete" onClick={() => { deleteMoodboard(moodboard.id); setMenuMoodboardId(''); }}>Delete</button></div>}</div>;
+    }) : <p className="empty">{moodboards.length ? 'No moodboards match that search.' : 'Empty for now. Create your first moodboard!'}</p>}</div>
+  </section>;
+}
+
+const moodboardShapes = { square: '■', circle: '●', arch: '◖' };
+// Keep enough of the collapsed sheet above the bottom edge for the grab handle
+// to remain unmistakably visible (including on phones with bottom UI insets).
+const collapsedDrawerPeek = 54;
+const moodboardFonts = [
+  { value: 'Erode, Georgia, serif', label: 'Erode' },
+  { value: 'Arial, Helvetica, sans-serif', label: 'Sans' },
+  { value: 'Georgia, serif', label: 'Classic' },
+  { value: 'cursive', label: 'Script' },
+];
+// A moodboard object has the same placement every 180 degrees, but its content
+// would be upside down. Keep the equivalent angle in the upright half-turn for
+// both the object and its selection controls.
+const uprightRotation = (rotation = 0) => ((rotation + 90) % 180 + 180) % 180 - 90;
+function MoodboardThumbnail({ moodboard }) {
+  const board = moodboard.canvas || {};
+  const objects = board.objects || [];
+  return <span className="moodboard-thumbnail" style={{ background: board.background || '#fff' }} aria-hidden="true">
+    {objects.map((object) => <span key={object.id} className={`moodboard-thumbnail-object ${object.type}`} style={{ left: `${object.x}%`, top: `${object.y}%`, '--thumbnail-colour': object.color, '--thumbnail-scale': object.scale || 1, '--thumbnail-rotation': `${uprightRotation(object.rotation)}deg`, ...(object.type === 'image' ? { width: `${object.size || 88}px`, height: `${object.size || 88}px` } : {}), ...(object.type === 'text' ? { '--thumbnail-text-width': `${object.width || 180}px`, '--thumbnail-font': object.fontFamily || moodboardFonts[0].value, '--thumbnail-align': object.textAlign || 'left' } : {}) }}>
+      {object.type === 'image' && <img src={object.src} alt="" />}
+      {object.type === 'shape' && <i className={`thumbnail-shape-${object.shape}`} />}
+      {object.type === 'text' && <i>{object.text}</i>}
+      {object.type === 'swatch' && <i />}
+    </span>)}
+  </span>;
+}
+function MoodboardDrawerItem({ item, onAdd, onOpenColours }) {
+  return <div className="drawer-item-wrap"><button className="drawer-item" type="button" onClick={() => onAdd(item)}><img src={item.src} alt={item.name} /><span>{item.name}</span></button>{item.colors?.length > 0 && <button className="drawer-item-swatches" type="button" onClick={(event) => onOpenColours(item, event.currentTarget)} aria-haspopup="dialog" aria-label={`Choose from ${item.name} colours`} title={`Choose from ${item.name} colours`}><span aria-hidden="true">{item.colors.map((colour) => <i key={colour} style={{ '--swatch-colour': colour }} />)}</span></button>}</div>;
+}
+function Moodboard({ folders, moodboard, onRename, onCanvasChange, onBack }) {
+  const savedCanvas = moodboard.canvas || {};
+  const [activeFolderId, setActiveFolderId] = useState(folders[0]?.id || '');
+  const [background, setBackground] = useState(savedCanvas.background || '#ffffff');
+  const [activeColour, setActiveColour] = useState(savedCanvas.activeColour || '#ff8248');
+  const [activeFont, setActiveFont] = useState(savedCanvas.activeFont || moodboardFonts[0].value);
+  const [objects, setObjects] = useState(savedCanvas.objects || []);
+  const [selectedId, setSelectedId] = useState('');
+  const [drawerOffset, setDrawerOffset] = useState(0);
+  const [drawerSnap, setDrawerSnap] = useState('collapsed');
+  const [drawerDragging, setDrawerDragging] = useState(false);
+  const [drawerHeight, setDrawerHeight] = useState(0);
+  const [drawerSearch, setDrawerSearch] = useState('');
+  const [shapeMenuOpen, setShapeMenuOpen] = useState(false);
+  const [paletteItem, setPaletteItem] = useState(null);
+  const [paletteAnchor, setPaletteAnchor] = useState(null);
+  const screenRef = useRef(null);
+  const drawerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const selectedObjectRef = useRef(null);
+  const palettePickerRef = useRef(null);
+  const textInputRefs = useRef({});
+  const photoInputRef = useRef(null);
+  const titleInputRef = useRef(null);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(moodboard.name);
+  const [selectionBox, setSelectionBox] = useState(null);
+  const drawerStart = useRef(null);
+  const ignoreDrawerClick = useRef(false);
+  const objectDrag = useRef(null);
+  const objectResize = useRef(null);
+  const objectRotate = useRef(null);
+  useEffect(() => {
+    if (!isEditingTitle) setTitleDraft(moodboard.name);
+  }, [isEditingTitle, moodboard.name]);
+  useEffect(() => {
+    if (isEditingTitle) titleInputRef.current?.focus();
+  }, [isEditingTitle]);
+  useEffect(() => {
+    onCanvasChange({ background, activeColour, activeFont, objects });
+  }, [activeColour, activeFont, background, objects, onCanvasChange]);
+  const saveTitle = () => {
+    const nextTitle = titleDraft.trim();
+    if (nextTitle) onRename(nextTitle);
+    else setTitleDraft(moodboard.name);
+    setIsEditingTitle(false);
+  };
+  const suppressObjectClick = useRef(false);
+  const activeFolder = findFolder(folders, activeFolderId) || folders[0];
+  const filteredItems = activeFolder?.items.filter((item) => item.name.toLowerCase().includes(drawerSearch.trim().toLowerCase())) || [];
+  const selectedObject = objects.find((object) => object.id === selectedId);
+  const drawerSnapOffsets = useMemo(() => ({
+    expanded: 0,
+    // Leave only the grab area exposed while keeping the drawer reachable.
+    collapsed: Math.max(0, drawerHeight - collapsedDrawerPeek),
+  }), [drawerHeight]);
+
+  useLayoutEffect(() => {
+    const drawer = drawerRef.current;
+    if (!drawer) return undefined;
+    const updateDimensions = () => {
+      setDrawerHeight(drawer.getBoundingClientRect().height);
+    };
+    updateDimensions();
+    const observer = new ResizeObserver(updateDimensions);
+    observer.observe(drawer);
+    return () => observer.disconnect();
+  }, []);
+  useLayoutEffect(() => {
+    const canvas = canvasRef.current;
+    const selectedObject = selectedObjectRef.current;
+    if (!canvas || !selectedObject || !selectedId) {
+      setSelectionBox(null);
+      return undefined;
+    }
+    const updateSelectionBox = () => {
+      const canvasRect = canvas.getBoundingClientRect();
+      const objectRect = selectedObject.getBoundingClientRect();
+      // Read the final transform from the browser instead of reconstructing it
+      // from viewport dimensions. This includes both the object's saved scale
+      // and the responsive mobile scale, so the selection border stays glued
+      // to a shape while it is resized.
+      const transform = window.getComputedStyle(selectedObject).transform;
+      const matrixValues = transform.match(/^matrix\((.+)\)$/)?.[1].split(',').map(Number);
+      const renderedScale = matrixValues ? Math.hypot(matrixValues[0], matrixValues[1]) : 1;
+      // offsetWidth/offsetHeight describe the object before its CSS rotation.
+      // Position this box from the transformed object's center, then rotate the
+      // box itself so the outline and its controls stay attached to the object.
+      const width = selectedObject.offsetWidth * renderedScale;
+      const height = selectedObject.offsetHeight * renderedScale;
+      const centerX = objectRect.left + objectRect.width / 2;
+      const centerY = objectRect.top + objectRect.height / 2;
+      setSelectionBox({
+        left: centerX - canvasRect.left - canvas.clientLeft - width / 2,
+        top: centerY - canvasRect.top - canvas.clientTop - height / 2,
+        width,
+        height,
+      });
+    };
+    updateSelectionBox();
+    const observer = new ResizeObserver(updateSelectionBox);
+    observer.observe(canvas);
+    observer.observe(selectedObject);
+    return () => observer.disconnect();
+  }, [objects, selectedId]);
+  useLayoutEffect(() => {
+    // A textarea does not grow to its wrapped contents by itself. Resetting
+    // then measuring it makes its height follow the rendered line count while
+    // keeping the font size independent from the box width.
+    Object.values(textInputRefs.current).forEach((input) => {
+      if (!input) return;
+      input.style.height = 'auto';
+      input.style.height = `${input.scrollHeight}px`;
+    });
+  }, [objects]);
+  useEffect(() => {
+    if (!paletteItem) return undefined;
+    const dismissPalette = (event) => {
+      if (!palettePickerRef.current?.contains(event.target)) {
+        setPaletteItem(null);
+        setPaletteAnchor(null);
+      }
+    };
+    const dismissOnEscape = (event) => {
+      if (event.key === 'Escape') {
+        setPaletteItem(null);
+        setPaletteAnchor(null);
+      }
+    };
+    window.addEventListener('pointerdown', dismissPalette);
+    window.addEventListener('keydown', dismissOnEscape);
+    return () => {
+      window.removeEventListener('pointerdown', dismissPalette);
+      window.removeEventListener('keydown', dismissOnEscape);
+    };
+  }, [paletteItem]);
+  const openPalette = (item, trigger) => {
+    const rect = trigger.getBoundingClientRect();
+    setPaletteAnchor({ left: rect.left + rect.width / 2, top: rect.top + rect.height / 2 });
+    setPaletteItem(item);
+  };
+  const selectObject = (id) => setSelectedId(id);
+  const addObject = (type, payload = {}) => {
+    const id = `board-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    const offset = 24 + (objects.length % 4) * 12;
+    const object = { id, type, x: offset, y: offset, ...payload };
+    setObjects((current) => [...current, object]);
+    setSelectedId(id);
+  };
+  const addItem = (item) => addObject('image', { src: item.src, name: item.name, size: 88 });
+  const addShape = (shape) => addObject('shape', { shape, color: activeColour, scale: 1, showColourCode: false });
+  const addText = () => addObject('text', { text: 'A little idea', color: activeColour, fontFamily: activeFont, scale: 1, width: 180, textAlign: 'left' });
+  const changeFont = (fontFamily) => {
+    setActiveFont(fontFamily);
+    setObjects((current) => current.map((object) => (
+      object.id === selectedId && object.type === 'text' ? { ...object, fontFamily } : object
+    )));
+  };
+  const addOwnPhoto = (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = () => addObject('image', { src: reader.result, name: file.name.replace(/\.[^.]+$/, '') || 'My photo', size: 120 });
+    reader.readAsDataURL(file);
+    event.target.value = '';
+  };
+  const applyBoardColour = (colour) => {
+    setActiveColour(colour);
+    // A picked colour is also an edit operation when a colourable board
+    // object is selected; otherwise it remains the colour for new objects.
+    setObjects((current) => current.map((object) => (
+      object.id === selectedId && (object.type === 'shape' || object.type === 'text')
+        ? { ...object, color: colour }
+        : object
+    )));
+  };
+  const pickBoardColour = async () => {
+    // The browser's EyeDropper keeps the canvas visible and provides the
+    // magnified sampler. A native colour input opens an RGB picker instead.
+    if (!('EyeDropper' in window)) return;
+    try {
+      const { sRGBHex } = await new window.EyeDropper().open();
+      applyBoardColour(sRGBHex);
+    } catch {
+      // Dismissing the sampler is an expected no-op.
+    }
+  };
+  const beginDrawerDrag = (event, fromContent = false) => {
+    const interactiveTarget = event.target.closest?.('button, input');
+    if (interactiveTarget && (fromContent || !interactiveTarget.classList.contains('drawer-grab'))) return;
+    if (fromContent && event.currentTarget.scrollTop > 0) return;
+    drawerStart.current = { y: event.clientY, offset: drawerSnapOffsets[drawerSnap], fromContent, dragStarted: false };
+    if (!fromContent) {
+      if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
+    }
+  };
+  const moveDrawerDrag = (event) => {
+    if (!drawerStart.current) return;
+    const moved = event.clientY - drawerStart.current.y;
+    if (!drawerStart.current.dragStarted && Math.abs(moved) < 4) return;
+    if (drawerStart.current.fromContent) {
+      if (event.currentTarget.scrollTop > 0 || moved <= 0) return;
+      if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    drawerStart.current.dragStarted = true;
+    setDrawerDragging(true);
+    setDrawerOffset(Math.max(0, Math.min(drawerSnapOffsets.collapsed, drawerStart.current.offset + moved)));
+  };
+  const endDrawerDrag = (event) => {
+    if (!drawerStart.current) return;
+    if (!drawerStart.current.dragStarted) {
+      drawerStart.current = null;
+      setDrawerDragging(false);
+      return;
+    }
+    const moved = event.clientY - drawerStart.current.y;
+    const finalOffset = Math.max(0, Math.min(drawerSnapOffsets.collapsed, drawerStart.current.offset + moved));
+    const nextSnap = Object.entries(drawerSnapOffsets).reduce((closest, [snap, offset]) => Math.abs(offset - finalOffset) < Math.abs(drawerSnapOffsets[closest] - finalOffset) ? snap : closest, 'collapsed');
+    setDrawerSnap(nextSnap);
+    setDrawerOffset(drawerSnapOffsets[nextSnap]);
+    drawerStart.current = null;
+    ignoreDrawerClick.current = true;
+    window.setTimeout(() => { ignoreDrawerClick.current = false; }, 0);
+    setDrawerDragging(false);
+  };
+  const cancelDrawerDrag = () => {
+    if (!drawerStart.current) return;
+    setDrawerOffset(drawerSnapOffsets[drawerSnap]);
+    drawerStart.current = null;
+    setDrawerDragging(false);
+  };
+  const toggleDrawer = () => {
+    if (ignoreDrawerClick.current) {
+      ignoreDrawerClick.current = false;
+      return;
+    }
+    setDrawerSnap((snap) => snap === 'collapsed' ? 'expanded' : 'collapsed');
+  };
+  const beginObjectDrag = (event, object, preserveTextTap = false) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    // A touch on text can still place the caret when it remains a tap. If the
+    // finger moves, the shared pointer-move path below turns it into a drag.
+    if (!preserveTextTap) event.preventDefault();
+    event.stopPropagation();
+    objectDrag.current = { id: object.id, pointerId: event.pointerId, x: event.clientX, y: event.clientY, originX: object.x, originY: object.y, moved: false, textInput: preserveTextTap ? event.currentTarget : null };
+    try {
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+    } catch {
+      // Some touch browsers reject pointer capture after a rapid re-render.
+      // The canvas reference below still keeps the drag safe to continue.
+    }
+    selectObject(object.id);
+  };
+  const beginObjectResize = (event, object, corner) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const sx = corner.includes('right') ? 1 : -1;
+    const sy = corner.includes('bottom') ? 1 : -1;
+    const objectRect = selectedObjectRef.current?.getBoundingClientRect();
+    if (!objectRect?.width || !objectRect.height) return;
+    objectResize.current = {
+      id: object.id,
+      type: object.type,
+      pointerId: event.pointerId,
+      sx,
+      sy,
+      width: objectRect.width,
+      height: objectRect.height,
+      scale: object.scale || 1,
+      oppositeX: sx === 1 ? objectRect.left : objectRect.right,
+      oppositeY: sy === 1 ? objectRect.top : objectRect.bottom,
+    };
+    try {
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+    } catch {
+      // The window listeners still provide a fallback on browsers that reject
+      // capture during a touch gesture.
+    }
+    selectObject(object.id);
+  };
+  const moveObjectResize = (event) => {
+    const resize = objectResize.current;
+    if (!resize || event.pointerId !== resize.pointerId) return;
+    event.preventDefault();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const horizontalSize = resize.sx * (event.clientX - resize.oppositeX);
+    const verticalSize = resize.sy * (event.clientY - resize.oppositeY);
+    if (resize.type === 'text') {
+      // Text boxes begin at their content width. Once a resize handle is
+      // moved, retain that explicit width so text wraps naturally as the box
+      // becomes narrower.
+      const width = Math.max(40, horizontalSize / resize.scale);
+      const visualWidth = width * resize.scale;
+      const centerX = resize.oppositeX + resize.sx * visualWidth / 2;
+      const x = Math.max((visualWidth / 2 / rect.width) * 100, Math.min(100 - (visualWidth / 2 / rect.width) * 100, ((centerX - rect.left) / rect.width) * 100));
+      setObjects((current) => current.map((object) => object.id === resize.id ? { ...object, x, width } : object));
+      return;
+    }
+    // Let the axis the user has moved furthest control a proportional resize.
+    // Using the larger size ratio prevented an object from shrinking when the
+    // other axis stayed at its original size (for example, dragging a text
+    // corner inward mostly horizontally).
+    const horizontalScale = horizontalSize / resize.width;
+    const verticalScale = verticalSize / resize.height;
+    const scaleFactor = Math.abs(horizontalScale - 1) >= Math.abs(verticalScale - 1)
+      ? horizontalScale
+      : verticalScale;
+    const scale = Math.max(0.4, Math.min(4, resize.scale * scaleFactor));
+    const width = resize.width * (scale / resize.scale);
+    const height = resize.height * (scale / resize.scale);
+    const centerX = resize.oppositeX + resize.sx * width / 2;
+    const centerY = resize.oppositeY + resize.sy * height / 2;
+    const x = Math.max((width / 2 / rect.width) * 100, Math.min(100 - (width / 2 / rect.width) * 100, ((centerX - rect.left) / rect.width) * 100));
+    const y = Math.max((height / 2 / rect.height) * 100, Math.min(100 - (height / 2 / rect.height) * 100, ((centerY - rect.top) / rect.height) * 100));
+    setObjects((current) => current.map((object) => object.id === resize.id ? { ...object, x, y, scale } : object));
+  };
+  const finishObjectResize = (event) => {
+    if (!objectResize.current || (event && event.pointerId !== objectResize.current.pointerId)) return;
+    objectResize.current = null;
+    suppressObjectClick.current = true;
+  };
+  const beginObjectRotate = (event, object) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const objectRect = selectedObjectRef.current?.getBoundingClientRect();
+    if (!objectRect) return;
+    // Keep the center fixed for the entire gesture. Measuring it again after
+    // each render can make a rotated element chase its changing bounding box.
+    const centerX = objectRect.left + objectRect.width / 2;
+    const centerY = objectRect.top + objectRect.height / 2;
+    const startCursorAngle = Math.atan2(event.clientY - centerY, event.clientX - centerX) * 180 / Math.PI;
+    objectRotate.current = {
+      id: object.id,
+      pointerId: event.pointerId,
+      centerX,
+      centerY,
+      // Preserve the relationship between the cursor and the handle at the
+      // moment rotation begins, so the object does not snap on first move.
+      lastCursorAngle: startCursorAngle,
+      rotation: object.rotation || 0,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    selectObject(object.id);
+  };
+  const moveObjectRotate = (event) => {
+    const rotate = objectRotate.current;
+    if (!rotate || event.pointerId !== rotate.pointerId) return;
+    event.preventDefault();
+    const cursorAngle = Math.atan2(event.clientY - rotate.centerY, event.clientX - rotate.centerX) * 180 / Math.PI;
+    // atan2 wraps from 180° to -180°. Unwrap that boundary so a cursor moving
+    // smoothly across it cannot make the object jump through a full turn.
+    const angleDelta = ((cursorAngle - rotate.lastCursorAngle + 540) % 360) - 180;
+    rotate.lastCursorAngle = cursorAngle;
+    // Let the pointer movement remain continuous, but render the equivalent
+    // upright angle so the object's content can never end up upside down.
+    rotate.rotation += angleDelta;
+    const rotation = Math.round(uprightRotation(rotate.rotation));
+    setObjects((current) => current.map((object) => object.id === rotate.id ? { ...object, rotation } : object));
+  };
+  const finishObjectRotate = (event) => {
+    if (!objectRotate.current || (event && event.pointerId !== objectRotate.current.pointerId)) return;
+    objectRotate.current = null;
+    suppressObjectClick.current = true;
+  };
+  const moveObjectDrag = (event) => {
+    const drag = objectDrag.current;
+    if (!drag || event.pointerId !== drag.pointerId) return;
+    event.preventDefault();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    if (Math.abs(event.clientX - drag.x) > 2 || Math.abs(event.clientY - drag.y) > 2) {
+      drag.moved = true;
+      drag.textInput?.blur();
+    }
+    const nextX = Math.max(7, Math.min(93, drag.originX + ((event.clientX - drag.x) / rect.width) * 100));
+    const nextY = Math.max(7, Math.min(93, drag.originY + ((event.clientY - drag.y) / rect.height) * 100));
+    const draggedId = drag.id;
+    setObjects((current) => current.map((object) => object.id === draggedId ? { ...object, x: nextX, y: nextY } : object));
+  };
+  const finishObjectDrag = (event) => {
+    const drag = objectDrag.current;
+    if (!drag || (event && event.pointerId !== drag.pointerId)) return;
+    suppressObjectClick.current = drag.moved;
+    objectDrag.current = null;
+  };
+  const deleteObject = (id) => {
+    setObjects((current) => current.filter((object) => object.id !== id));
+    setSelectedId((current) => current === id ? '' : current);
+  };
+  const clearCanvas = () => {
+    setObjects([]);
+    setSelectedId('');
+    setShapeMenuOpen(false);
+    setPaletteItem(null);
+    setPaletteAnchor(null);
+  };
+  const updateText = (id, text) => {
+    setObjects((current) => current.map((object) => object.id === id ? { ...object, text } : object));
+  };
+  const toggleShapeColourCode = (id) => {
+    setObjects((current) => current.map((object) => (
+      object.id === id ? { ...object, showColourCode: !object.showColourCode } : object
+    )));
+  };
+  useEffect(() => {
+    // Listen at the window as a fallback for mobile browsers where pointer
+    // capture can be dropped during a component update.
+    const onMove = (event) => {
+      if (objectResize.current) moveObjectResize(event);
+      else if (objectRotate.current) moveObjectRotate(event);
+      else moveObjectDrag(event);
+    };
+    const onEnd = (event) => {
+      if (objectResize.current) finishObjectResize(event);
+      else if (objectRotate.current) finishObjectRotate(event);
+      else finishObjectDrag(event);
+    };
+    window.addEventListener('pointermove', onMove, { passive: false });
+    window.addEventListener('pointerup', onEnd);
+    window.addEventListener('pointercancel', onEnd);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onEnd);
+      window.removeEventListener('pointercancel', onEnd);
+    };
+  }, []);
+  return <section ref={screenRef} className="moodboard-screen">
+    <header className="moodboard-header"><button className="round-btn moodboard-back" onClick={onBack} aria-label="Back to moodboards"><BackArrow /></button><div className="moodboard-title">{isEditingTitle ? <input ref={titleInputRef} value={titleDraft} onChange={(event) => setTitleDraft(event.target.value)} onBlur={saveTitle} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); saveTitle(); } if (event.key === 'Escape') { setTitleDraft(moodboard.name); setIsEditingTitle(false); } }} aria-label="Moodboard title" maxLength="60" /> : <h1>{moodboard.name}</h1>}<button type="button" className="moodboard-title-edit" onClick={() => setIsEditingTitle(true)} aria-label="Edit moodboard title" title="Edit title"><PencilIcon /></button></div></header>
+    <main className="moodboard-workspace">
+      <div className="moodboard-toolbar" role="toolbar" aria-label="Moodboard tools">
+        <div className="moodboard-tool-group">
+          <button type="button" onClick={addText} aria-label="Add text"><img src={figmaTextIcon} alt="" /></button>
+          <label className="board-font" title="Change text font"><span aria-hidden="true">Aa</span><select value={activeFont} onChange={(event) => changeFont(event.target.value)} aria-label="Text font">{moodboardFonts.map((font) => <option key={font.value} value={font.value}>{font.label}</option>)}</select></label>
+          <div className="shape-menu"><button type="button" onClick={() => setShapeMenuOpen((open) => !open)} aria-label="Add shape" aria-expanded={shapeMenuOpen}><img src={figmaShapesIcon} alt="" /></button>{shapeMenuOpen && <div>{Object.entries(moodboardShapes).map(([key, icon]) => <button key={key} type="button" onClick={() => { addShape(key); setShapeMenuOpen(false); }} aria-label={`Add ${key}`}>{icon}</button>)}</div>}</div>
+          <button className="board-photo" type="button" onClick={() => photoInputRef.current?.click()} aria-label="Add your own photo" title="Add your own photo"><img src={imageIcon} alt="" /></button>
+          <input ref={photoInputRef} className="photo-upload-input" type="file" accept="image/*" onChange={addOwnPhoto} aria-label="Choose a photo to add" />
+          <label className="board-background" title="Canvas background colour"><img src={backgroundFillIcon} alt="" /><input type="color" value={background} onChange={(event) => setBackground(event.target.value)} aria-label="Canvas background colour" /></label>
+          <button className="board-eyedropper" type="button" onClick={pickBoardColour} aria-label="Pick a colour from the canvas" title="Pick a colour from the canvas"><img src={figmaEyedropperIcon} alt="" /></button>
+        </div>
+        <button className="clear-canvas" type="button" onClick={clearCanvas} aria-label="Clear canvas" title="Clear canvas">Clear</button>
+      </div>
+      <div ref={canvasRef} className="moodboard-canvas" style={{ background }} onClick={() => setSelectedId('')}>
+        {objects.map((object) => <div key={object.id} ref={selectedId === object.id ? selectedObjectRef : null} role="button" tabIndex="0" className={`board-object ${object.type} ${selectedId === object.id ? 'selected' : ''}`} style={{ left: `${object.x}%`, top: `${object.y}%`, '--object-colour': object.color, '--object-scale': object.scale || 1, '--object-rotation': `${uprightRotation(object.rotation)}deg`, ...(object.type === 'image' ? { width: `${object.size || 88}px`, height: `${object.size || 88}px` } : {}), ...(object.type === 'text' ? { '--text-width': `${object.width || 180}px`, '--text-align': object.textAlign || 'left', '--text-font': object.fontFamily || moodboardFonts[0].value } : {}) }} onPointerDown={(event) => beginObjectDrag(event, object)} onClick={(event) => { event.stopPropagation(); if (suppressObjectClick.current) { suppressObjectClick.current = false; return; } selectObject(object.id); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectObject(object.id); } }}>
+          {object.type === 'image' && <img src={object.src} alt={object.name} draggable="false" />}{object.type === 'shape' && <span className={`shape-${object.shape}`} role="img" aria-label={object.shape}>{object.showColourCode && <b className="shape-colour-code" style={{ '--shape-code-colour': contrastingTextColor(object.color) }}>{object.color.toUpperCase()}</b>}</span>}{object.type === 'text' && <textarea ref={(node) => { if (node) textInputRefs.current[object.id] = node; else delete textInputRefs.current[object.id]; }} className="board-text-input" rows="1" value={object.text} aria-label="Moodboard text" onPointerDown={(event) => { if (event.pointerType === 'touch') beginObjectDrag(event, object, true); else { event.stopPropagation(); selectObject(object.id); } }} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()} onChange={(event) => updateText(object.id, event.target.value)} />}{object.type === 'swatch' && <span />}</div>)}
+        {selectionBox && selectedObject && <div className="board-selection-box" style={{ left: selectionBox.left, top: selectionBox.top, width: selectionBox.width, height: selectionBox.height, '--selection-rotation': `${uprightRotation(selectedObject.rotation)}deg` }} onPointerDown={(event) => beginObjectDrag(event, selectedObject)} onClick={(event) => event.stopPropagation()}><button className="board-object-delete" type="button" aria-label={`Delete ${selectedObject.type === 'image' ? selectedObject.name : selectedObject.type}`} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => { event.stopPropagation(); deleteObject(selectedObject.id); }}>×</button>{selectedObject.type === 'shape' && <button className={`board-shape-eye ${selectedObject.showColourCode ? 'is-visible' : ''}`} type="button" aria-label={`${selectedObject.showColourCode ? 'Hide' : 'Show'} ${selectedObject.color.toUpperCase()} colour code`} aria-pressed={Boolean(selectedObject.showColourCode)} title={`${selectedObject.showColourCode ? 'Hide' : 'Show'} colour code`} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => { event.stopPropagation(); toggleShapeColourCode(selectedObject.id); }}><EyeIcon open={selectedObject.showColourCode} /></button>}{(selectedObject.type === 'text' ? ['middle-left', 'middle-right'] : ['top-left', 'top-right', 'bottom-left', 'bottom-right']).map((corner) => <button type="button" key={corner} className={`board-resize-handle ${corner}`} aria-label={`Resize ${selectedObject.type} from ${corner.replace('-', ' ')}`} onPointerDown={(event) => beginObjectResize(event, selectedObject, corner)} onPointerMove={moveObjectResize} onPointerUp={finishObjectResize} onPointerCancel={finishObjectResize} />)}<button className="board-rotate-handle" type="button" aria-label={`Rotate ${selectedObject.type}. Current angle ${uprightRotation(selectedObject.rotation)} degrees`} onPointerDown={(event) => beginObjectRotate(event, selectedObject)}><span aria-hidden="true">↻</span><output>{uprightRotation(selectedObject.rotation)}°</output></button></div>}
+        {!objects.length && <div className="canvas-empty"><b>Build the feeling.</b><span>Tap an item below to place it here.</span></div>}
+      </div>
+    </main>
+    <div className={`moodboard-drawer-shell ${drawerDragging ? 'is-dragging' : ''}`} style={{ '--drawer-offset': drawerHeight ? `${drawerDragging ? drawerOffset : drawerSnapOffsets[drawerSnap]}px` : `calc(100% - ${collapsedDrawerPeek}px)` }}><aside ref={drawerRef} className="moodboard-drawer" aria-label="Your stashes"><div className="drawer-sheet-header" onPointerDown={beginDrawerDrag} onPointerMove={moveDrawerDrag} onPointerUp={endDrawerDrag} onPointerCancel={cancelDrawerDrag}><button className="drawer-grab" type="button" onClick={toggleDrawer} aria-expanded={drawerSnap !== 'collapsed'} aria-label={`Stash drawer: ${drawerSnap}. Activate to change size.`}><span /></button><div className="stash-tabs" aria-label="Choose a stash">{folders.map((folder) => <button key={folder.id} type="button" className={activeFolder?.id === folder.id ? 'active' : ''} onClick={() => { setActiveFolderId(folder.id); setDrawerSearch(''); }}>{folder.icon} {folder.name}</button>)}</div>{!folders.length && <p className="drawer-empty-stashes">Create a stash to add your own finds</p>}</div>{activeFolder && <div className="drawer-content"><label className="drawer-search"><span aria-hidden="true">⌕</span><input type="search" value={drawerSearch} onChange={(event) => setDrawerSearch(event.target.value)} placeholder="Search" aria-label="Search this stash" /></label><div className="drawer-items" onPointerDown={(event) => beginDrawerDrag(event, true)} onPointerMove={moveDrawerDrag} onPointerUp={endDrawerDrag} onPointerCancel={cancelDrawerDrag}>{filteredItems.length ? filteredItems.map((item) => <MoodboardDrawerItem key={item.id} item={item} onAdd={addItem} onOpenColours={openPalette} />) : <p>{activeFolder.items.length ? 'No items match your search.' : 'This stash is empty. Add an item, then come back to compose.'}</p>}</div></div>}</aside></div>
+    {paletteItem && paletteAnchor && <section ref={palettePickerRef} className="drawer-colour-picker" role="dialog" aria-modal="false" aria-label={`Choose a colour from ${paletteItem.name}`} style={{ left: paletteAnchor.left, top: paletteAnchor.top }}><div>{paletteItem.colors.map((colour) => <button key={colour} type="button" className={activeColour.toLowerCase() === colour.toLowerCase() ? 'selected' : ''} style={{ '--picker-colour': colour }} onClick={() => { applyBoardColour(colour); setPaletteItem(null); setPaletteAnchor(null); }} aria-label={`Use ${colour}`} aria-pressed={activeColour.toLowerCase() === colour.toLowerCase()} />)}</div></section>}
   </section>;
 }
 
@@ -102,7 +653,7 @@ function Collection({ folder, onBack, openItem, openItemModal, openEditModal, op
     '--folder-text': contrastingTextColor(folder.color),
   };
   const chooseMenuAction = (action) => { setMenuOpen(false); action(); };
-  return <section className="screen collection-screen"><header className="topbar"><button className="round-btn" onClick={onBack} aria-label="Back to stashes"><BackArrow /></button><div className="collection-actions"><button className="btn btn-orange primary-action" onClick={openItemModal}>Add Item</button><div className="stash-menu"><button className="kebab-btn" type="button" onClick={() => setMenuOpen((open) => !open)} aria-label="Stash options" aria-expanded={menuOpen}>⋮</button>{menuOpen && <div className="stash-menu-panel" role="menu"><p>Stash options</p><button type="button" role="menuitem" onClick={() => chooseMenuAction(openEditModal)}>Edit</button><button type="button" role="menuitem" className="stash-menu-delete" onClick={() => chooseMenuAction(openDeleteModal)}>Delete</button></div>}</div></div></header><div className="collection-heading"><span className="collection-folder-icon" aria-hidden="true">{folder.icon}</span><div><h2>{folder.name}</h2><p className="collection-count">{folder.items.length} {folder.items.length === 1 ? 'item' : 'items'}</p></div></div><div className="collection-folder" style={folderStyle}><svg className="collection-folder__waves" viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 7 C20 2 38 11 58 6 C80 1 102 11 124 6 C143 2 152 7 160 4 V24 H0 Z" /></svg><div className="collection-folder__scroll"><div className="collection-item-grid">{folder.items.length ? folder.items.map((item) => <button key={item.id} className="item-card" onClick={() => openItem(folder.id, item.id)}><img src={item.src} alt={item.name} /><strong>{item.name}</strong><small>{item.material}</small></button>) : <p className="empty">This stash is ready for its first find.</p>}</div></div></div></section>;
+  return <section className="screen collection-screen"><header className="topbar"><button className="round-btn" onClick={onBack} aria-label="Back to stashes"><BackArrow /></button><div className="collection-actions"><button className="btn btn-orange primary-action" onClick={openItemModal}><span className="button-plus" aria-hidden="true">+</span>Add Item</button><div className="stash-menu"><button className="kebab-btn" type="button" onClick={() => setMenuOpen((open) => !open)} aria-label="Stash options" aria-expanded={menuOpen}>⋮</button>{menuOpen && <div className="stash-menu-panel" role="menu"><p>Stash options</p><button type="button" role="menuitem" onClick={() => chooseMenuAction(openEditModal)}>Edit</button><button type="button" role="menuitem" className="stash-menu-delete" onClick={() => chooseMenuAction(openDeleteModal)}>Delete</button></div>}</div></div></header><div className="collection-heading"><span className="collection-folder-icon" aria-hidden="true">{folder.icon}</span><div><h2>{folder.name}</h2><p className="collection-count">{folder.items.length} {folder.items.length === 1 ? 'item' : 'items'}</p></div></div><div className="collection-folder" style={folderStyle}><svg className="collection-folder__waves" viewBox="0 0 160 24" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 7 C20 2 38 11 58 6 C80 1 102 11 124 6 C143 2 152 7 160 4 V24 H0 Z" /></svg><div className="collection-folder__scroll"><div className="collection-item-grid">{folder.items.length ? folder.items.map((item) => <button key={item.id} className="item-card" onClick={() => openItem(folder.id, item.id)}><img src={item.src} alt={item.name} /><strong>{item.name}</strong><small>{item.material}</small></button>) : <p className="empty">This stash is ready for its first find.</p>}</div></div></div></section>;
 }
 
 function Detail({ folder, item, onBack, openEditItemModal, openDeleteItemModal }) {
@@ -608,7 +1159,8 @@ export default function App() {
   // A visit is intentionally a fresh session: the public link always opens
   // at the landing page and the library is empty until the visitor adds to it.
   const [folders, setFolders] = useState([]);
-  const [page, setPage] = useState('home'); const [folderId, setFolderId] = useState(''); const [itemId, setItemId] = useState(''); const [search, setSearch] = useState(''); const [modal, setModal] = useState(''); const [itemFolderSpecific, setItemFolderSpecific] = useState(false);
+  const [moodboards, setMoodboards] = useState([]);
+  const [page, setPage] = useState('home'); const [folderId, setFolderId] = useState(''); const [itemId, setItemId] = useState(''); const [moodboardId, setMoodboardId] = useState(''); const [search, setSearch] = useState(''); const [modal, setModal] = useState(''); const [itemFolderSpecific, setItemFolderSpecific] = useState(false);
   const folder = findFolder(folders, folderId) || folders[0]; const item = folder?.items.find((entry) => entry.id === itemId) || folder?.items[0];
   const openFolder = (id) => { setFolderId(id); setSearch(''); setPage('collection'); };
   const openItem = (nextFolderId, nextItemId) => { setFolderId(nextFolderId); setItemId(nextItemId); setSearch(''); setPage('detail'); };
@@ -630,6 +1182,19 @@ export default function App() {
   };
   const deleteFolder = (id) => { setFolders((current) => current.filter((candidate) => candidate.id !== id)); setModal(''); setSearch(''); setPage('home'); };
   const deleteItem = (id) => { setFolders((current) => current.map((candidate) => candidate.id === folder.id ? { ...candidate, items: candidate.items.filter((entry) => entry.id !== id) } : candidate)); setModal(''); setPage('collection'); };
+  const moodboard = moodboards.find((entry) => entry.id === moodboardId);
+  const openMoodboard = (id) => { setMoodboardId(id); setSearch(''); setPage('moodboard'); };
+  const renameMoodboard = (name) => { setMoodboards((current) => current.map((entry) => entry.id === moodboardId ? { ...entry, name } : entry)); };
+  const updateMoodboardCanvas = useCallback((canvas) => {
+    setMoodboards((current) => current.map((entry) => entry.id === moodboardId ? { ...entry, canvas } : entry));
+  }, [moodboardId]);
+  const deleteMoodboard = (id) => { setMoodboards((current) => current.filter((entry) => entry.id !== id)); };
+  const createMoodboard = () => {
+    const entry = { id: `moodboard-${Date.now()}`, name: `Moodboard ${moodboards.length + 1}` };
+    setMoodboards((current) => [...current, entry]);
+    openMoodboard(entry.id);
+  };
+  const changeMode = (mode) => { setSearch(''); setPage(mode === 'moodboard' ? 'moodboard-library' : 'home'); };
   if (!hasEntered) return <Landing onEnter={() => setHasEntered(true)} />;
-  return <><GridWarpFilter />{page === 'collection' ? <Collection folder={folder} onBack={() => setPage('home')} openItem={openItem} openItemModal={() => openItemModal(true)} openEditModal={() => setModal('edit-folder')} openDeleteModal={() => setModal('delete-folder')} /> : page === 'detail' && item ? <Detail folder={folder} item={item} onBack={() => setPage('collection')} openEditItemModal={() => setModal('edit-item')} openDeleteItemModal={() => setModal('delete-item')} /> : <Home folders={folders} search={search} setSearch={setSearch} openFolder={openFolder} openItem={openItem} openFolderModal={() => setModal('folder')} openItemModal={() => openItemModal(false)} />}{modal === 'folder' && <FolderModal close={() => setModal('')} createFolder={createFolder} />}{modal === 'edit-folder' && folder && <FolderModal close={() => setModal('')} folder={folder} updateFolder={updateFolder} />}{modal === 'item' && <ItemModal folder={folder} folders={folders} isFolderSpecific={itemFolderSpecific} close={() => setModal('')} createItem={createItem} />}{modal === 'edit-item' && item && <ItemEditModal item={item} folder={folder} folders={folders} close={() => setModal('')} updateItem={updateItem} />}{modal === 'delete-folder' && folder && <DeleteFolderModal folder={folder} close={() => setModal('')} deleteFolder={deleteFolder} />}{modal === 'delete-item' && item && <DeleteItemModal item={item} close={() => setModal('')} deleteItem={deleteItem} />}</>;
+  return <><GridWarpFilter />{page === 'moodboard' && moodboard ? <Moodboard folders={folders} moodboard={moodboard} onRename={renameMoodboard} onCanvasChange={updateMoodboardCanvas} onBack={() => changeMode('moodboard')} /> : page === 'moodboard-library' ? <MoodboardLibrary moodboards={moodboards} search={search} setSearch={setSearch} createMoodboard={createMoodboard} openMoodboard={openMoodboard} deleteMoodboard={deleteMoodboard} onModeChange={changeMode} /> : page === 'collection' ? <Collection folder={folder} onBack={() => setPage('home')} openItem={openItem} openItemModal={() => openItemModal(true)} openEditModal={() => setModal('edit-folder')} openDeleteModal={() => setModal('delete-folder')} /> : page === 'detail' && item ? <Detail folder={folder} item={item} onBack={() => setPage('collection')} openEditItemModal={() => setModal('edit-item')} openDeleteItemModal={() => setModal('delete-item')} /> : <Home folders={folders} search={search} setSearch={setSearch} openFolder={openFolder} openItem={openItem} openFolderModal={() => setModal('folder')} openItemModal={() => openItemModal(false)} onModeChange={changeMode} />}{modal === 'folder' && <FolderModal close={() => setModal('')} createFolder={createFolder} />}{modal === 'edit-folder' && folder && <FolderModal close={() => setModal('')} folder={folder} updateFolder={updateFolder} />}{modal === 'item' && <ItemModal folder={folder} folders={folders} isFolderSpecific={itemFolderSpecific} close={() => setModal('')} createItem={createItem} />}{modal === 'edit-item' && item && <ItemEditModal item={item} folder={folder} folders={folders} close={() => setModal('')} updateItem={updateItem} />}{modal === 'delete-folder' && folder && <DeleteFolderModal folder={folder} close={() => setModal('')} deleteFolder={deleteFolder} />}{modal === 'delete-item' && item && <DeleteItemModal item={item} close={() => setModal('')} deleteItem={deleteItem} />}</>;
 }
